@@ -3,6 +3,7 @@
 
 #include "token.h"
 #include "tokentype.h"
+#include <vector>
 
 enum class Process
 {
@@ -22,28 +23,21 @@ private:
     Process proc;
     std::string FileName;
     std::string code;
-    std::string::iterator iter;
+    std::string::const_iterator iter;
     size_t line;
 
 
+    void dealBegin(std::string &name, TokenType &type);
+    void dealKeyWord(std::string &name, TokenType &type);
+    void dealID(std::string &name, TokenType &type);
+    void dealInteger(std::string &name, TokenType &type);
+    void dealFloat(std::string &name, TokenType &type);
+    void dealOperator(std::string &name, TokenType &type);
+    void dealDelimiter(std::string &name, TokenType &type);
+    Token dealEnd(const std::string &name, const TokenType &type);
+
     void skipBlank();
-
-    void dealBegin();
-    void dealKeyWord();
-    void dealID();
-    void dealInteger();
-    void dealFloat();
-    void dealOperator();
-    void dealDelimiter();
-    void dealEnd();
-
-    void setProc(Process proc);
-    Process getProce();
-    void setFileName(const std::tring &FileName);
-    std::string getFileName();
-
-    bool openFile();
-    bool exit();
+    bool openFile(const std::string &FileName);
     Token getNextToken();
 
 public:

@@ -11,6 +11,8 @@ enum class TokenType
     ID,
     INT,
     FLOAT,
+    CHAR,
+    STRING,
     OPERATOR,
     DELIMITER,
     OTHER

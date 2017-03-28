@@ -13,6 +13,8 @@ std::shared_ptr<TokenDict>TokenDictInstance::getTokenDictPtr()
         TokenDictPtr->insert({TokenType::OPERATOR, "OPERATOR"});
         TokenDictPtr->insert({TokenType::DELIMITER, "DELIMITER"});
         TokenDictPtr->insert({TokenType::OTHER, "OTHER"});
+        TokenDictPtr->insert({TokenType::CHAR, "CHAR"});
+        TokenDictPtr->insert({TokenType::STRING, "STRING"});
     }
     return TokenDictInstance::TokenDictPtr;
 }
