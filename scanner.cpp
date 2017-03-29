@@ -99,14 +99,14 @@ void Scanner::dealFloat(std::string &name, TokenType &type)
 
 void Scanner::dealOperator(std::string &name, TokenType &type)
 {
-    if(*iter=='+' || *iter=='-' || *iter=='*' || *iter=='/' || *iter=='%' || *iter=='^' || *iter=='~')
+    if(*iter=='*' || *iter=='/' || *iter=='%' || *iter=='^' || *iter=='~')
     {
         name+=*iter;
         iter++;
         type = TokenType::OPERATOR;
         proc = Process::END;
     }
-    else if(*iter=='!' || *iter=='=' || *iter=='&' || *iter=='|' || *iter=='<' || *iter=='>')
+    else if(*iter=='!' || *iter=='=' || *iter=='&' || *iter=='|' || *iter=='<' || *iter=='>' || *iter=='+' || *iter=='-')
     {
         name+=*iter;
         const char lastOp = *iter;
@@ -139,6 +139,16 @@ void Scanner::dealOperator(std::string &name, TokenType &type)
                 *iter++;
             }
             else if(lastOp=='>' && *iter=='=')
+            {
+                name+=*iter;
+                *iter++;
+            }
+            else if(lastOp=='+' && *iter=='+')
+            {
+                name+=*iter;
+                *iter++;
+            }
+            else if(lastOp=='-' && *iter=='-')
             {
                 name+=*iter;
                 *iter++;
