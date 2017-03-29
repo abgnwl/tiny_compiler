@@ -1,4 +1,4 @@
-#include "Token.h"
+#include "token.h"
 
 void Token::setName(const std::string &name)
 {

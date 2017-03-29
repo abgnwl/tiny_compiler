@@ -2,7 +2,7 @@
 #define TOKEN_H_INCLUDED
 
 #include <string>
-#include "TokenType.h"
+#include "tokentype.h"
 
 class Token
 {

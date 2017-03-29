@@ -2,7 +2,7 @@
 #define SCANNER_H_INCLUDED
 
 #include "token.h"
-#include "tokentype.h"
+
 #include <vector>
 
 enum class Process
@@ -14,6 +14,8 @@ enum class Process
     IN_FLOAT,
     IN_OPERATOR,
     IN_DELIMITER,
+    IN_CHAR,
+    IN_STRING,
     END
 };
 
@@ -34,6 +36,8 @@ private:
     void dealFloat(std::string &name, TokenType &type);
     void dealOperator(std::string &name, TokenType &type);
     void dealDelimiter(std::string &name, TokenType &type);
+    void dealString(std::string &name, TokenType &type);
+    void dealChar(std::string &name, TokenType &type);
     Token dealEnd(const std::string &name, const TokenType &type);
 
     void skipBlank();

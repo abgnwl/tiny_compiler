@@ -18,17 +18,17 @@ enum class TokenType
     OTHER
 };
 
-typedef std::map<TokenType, std::string> TokenDict;
-
-
-class TokenDictInstance
+static std::map<TokenType, std::string> TokenDict=
 {
-private:
-    std::shared_ptr<TokenDict> TokenDictPtr;
-public:
-    std::shared_ptr<TokenDict> getTokenDictPtr();
-
+    {TokenType::KEYWORD,"keyword"},
+    {TokenType::ID,"id"},
+    {TokenType::INT,"int"},
+    {TokenType::FLOAT,"float"},
+    {TokenType::CHAR,"char"},
+    {TokenType::STRING,"string"},
+    {TokenType::OPERATOR,"operator"},
+    {TokenType::DELIMITER,"delimiter"},
+    {TokenType::OTHER,"other"}
 };
-
 
 #endif // TOKENTYPE_H_INCLUDED

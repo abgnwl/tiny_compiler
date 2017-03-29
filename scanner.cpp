@@ -1,9 +1,9 @@
 #include "scanner.h"
 #include "keyword.h"
+#include "tokentype.h"
 #include <fstream>
-#include <ctype.h>
+#include <cctype>
 
-#include <cstdio>
 
 void Scanner::skipBlank()
 {
@@ -32,7 +32,8 @@ void Scanner::dealBegin(std::string &name, TokenType &type)
     else if(std::isalpha(*iter) || *iter=='_')
         proc = Process::IN_ID;
     else if(*iter==',' || *iter==';' || *iter=='{' || *iter=='}'
-            || *iter=='[' || *iter==']' || *iter=='(' || *iter==')')
+            || *iter=='[' || *iter==']' || *iter=='(' || *iter==')'
+            || *iter=='#' || *iter=='.' || *iter=='"' || *iter=='\'')
         proc = Process::IN_DELIMITER;
     else
         proc = Process::IN_OPERATOR;
@@ -51,7 +52,7 @@ void Scanner::dealID(std::string &name, TokenType &type)
         name+=*iter;
         iter++;
     }
-    else if(KeyWordSet.find(name) != KeyWordSet.end())
+    else if(keyWordSet.find(name) != keyWordSet.end())
     {
         proc = Process::IN_KEYWORD;
     }
@@ -105,7 +106,7 @@ void Scanner::dealOperator(std::string &name, TokenType &type)
         type = TokenType::OPERATOR;
         proc = Process::END;
     }
-    else if(*iter=='!' || *iter=='=' || *iter=='&' || *iter=='|')
+    else if(*iter=='!' || *iter=='=' || *iter=='&' || *iter=='|' || *iter=='<' || *iter=='>')
     {
         name+=*iter;
         const char lastOp = *iter;
@@ -132,6 +133,16 @@ void Scanner::dealOperator(std::string &name, TokenType &type)
                 name+=*iter;
                 *iter++;
             }
+            else if(lastOp=='<' && *iter=='=')
+            {
+                name+=*iter;
+                *iter++;
+            }
+            else if(lastOp=='>' && *iter=='=')
+            {
+                name+=*iter;
+                *iter++;
+            }
             type = TokenType::OPERATOR;
             proc = Process::END;
         }
@@ -145,6 +156,8 @@ void Scanner::dealOperator(std::string &name, TokenType &type)
 
 void Scanner::dealDelimiter(std::string &name, TokenType &type)
 {
+    name+=*iter;
+    iter++;
     type = TokenType::DELIMITER;
     proc = Process::END;
 }
@@ -154,20 +167,49 @@ Token Scanner::dealEnd(const std::string &name, const TokenType &type)
     return Token(name,type,line);
 }
 
+void Scanner::dealString(std::string &name, TokenType &type)
+{
+    if(*iter=='"')
+    {
+        iter++;
+        type = TokenType::STRING;
+        proc = Process::END;
+    }
+    else
+    {
+        name+=*iter;
+        iter++;
+    }
+}
+
+void Scanner::dealChar(std::string &name, TokenType &type)
+{
+    if(*iter=='"')
+    {
+        iter++;
+        type = TokenType::CHAR;
+        proc = Process::END;
+    }
+    else
+    {
+        name+=*iter;
+        iter++;
+    }
+
+}
+
 bool Scanner::openFile(const std::string &FileName)
 {
     std::ifstream in(FileName);
     proc = Process::BEGIN;
     this->FileName = FileName;
     code = "";
-    line = 0;
+    line = 1;
 
 
     if(in)
     {
-        std::string str;
-        while(in>>str)
-            code+=str;
+        code = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
         iter = code.cbegin();
         return true;
     }
@@ -207,6 +249,12 @@ Token Scanner::getNextToken()
             break;
         case Process::IN_OPERATOR:
             dealOperator(name,type);
+            break;
+        case Process::IN_CHAR:
+            dealChar(name,type);
+            break;
+        case Process::IN_STRING:
+            dealString(name,type);
             break;
         case Process::END:
             auto token = dealEnd(name,type);

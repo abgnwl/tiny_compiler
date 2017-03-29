@@ -1,4 +1,4 @@
-#include "TokenType.h"
+#include "tokentype.h"
 
 
 std::shared_ptr<TokenDict>TokenDictInstance::getTokenDictPtr()
