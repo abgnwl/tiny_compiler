@@ -275,7 +275,6 @@ Token Scanner::getNextToken()
     return Token("", TokenType::OTHER, line);
 }
 
-
 std::vector<Token> Scanner::getTokens(const std::string FileName)
 {
     std::vector<Token> tokens;
