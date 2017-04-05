@@ -9,8 +9,8 @@
 		依次为关键字、标识符，整数常量、实数常量、字符常量、字符串常量、运算符、分隔符、其他
 
 #### 关键字：
-		"break","char","const","continue","else","float",
-		"for","if","int","return","signed","typedef",
+		"break","char","string","const","continue","else",
+		"float","for","if","int","return","signed","typedef",
 		"unsigned","void","include"
 
 #### 运算符：

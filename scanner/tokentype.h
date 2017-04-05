@@ -21,22 +21,22 @@ enum class TokenType
 
 static std::map<TokenType, std::string> TokenDict=
 {
-    {TokenType::KEYWORD,"keyword"},
-    {TokenType::ID,"id"},
-    {TokenType::INT,"int"},
-    {TokenType::FLOAT,"float"},
-    {TokenType::CHAR,"char"},
-    {TokenType::STRING,"string"},
-    {TokenType::OPERATOR,"operator"},
-    {TokenType::DELIMITER,"delimiter"},
-    {TokenType::OTHER,"other"}
+    {TokenType::KEYWORD,"KEYWORD"},
+    {TokenType::ID,"ID"},
+    {TokenType::INT,"INT"},
+    {TokenType::FLOAT,"FLOAT"},
+    {TokenType::CHAR,"CHAR"},
+    {TokenType::STRING,"STRING"},
+    {TokenType::OPERATOR,"OPERATOR"},
+    {TokenType::DELIMITER,"DELIMITER"},
+    {TokenType::OTHER,"OTHER"}
 };
 
 
 static std::vector<std::string> TokenStringType =
 {
     //constant
-    "int","float","char","string",
+    "INT","FLOAT","CHAR","STRING",
     //id
     "id",
     //operator
@@ -44,16 +44,16 @@ static std::vector<std::string> TokenStringType =
     //delimiter
     ",",";","{","}","[","]","(",")","#",".","\"","'",
     //keyword
-    "break","char","const","continue","else","float","for","if","int","return","signed","typedef","unsigned","void","include"
+    "break","char","string","const","continue","else","float","for","if","int","return","signed","typedef","unsigned","void","include"
 };
 
 static std::map<std::string, int> TokenCode =
 {
-    {"int",1},
-    {"float",2},
-    {"char",3},
-    {"string",4},
-    {"id",5},
+    {"INT",1},
+    {"FLOAT",2},
+    {"CHAR",3},
+    {"STRING",4},
+    {"ID",5},
     {"+",6},
     {"-",7},
     {"*",8},
@@ -89,19 +89,20 @@ static std::map<std::string, int> TokenCode =
     {"'",38},
     {"break",39},
     {"char",40},
-    {"const",41},
-    {"continue",42},
-    {"else",43},
-    {"float",44},
-    {"for",45},
-    {"if",46},
-    {"int",47},
-    {"return",48},
-    {"signed",49},
-    {"typedef",50},
-    {"unsigned",51},
-    {"void",52},
-    {"include",53}
+    {"string",41},
+    {"const",42},
+    {"continue",43},
+    {"else",44},
+    {"float",45},
+    {"for",46},
+    {"if",47},
+    {"int",48},
+    {"return",49},
+    {"signed",50},
+    {"typedef",51},
+    {"unsigned",52},
+    {"void",53},
+    {"include",54}
 };
 
 #endif // TOKENTYPE_H_INCLUDED

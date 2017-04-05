@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstdio>
-#include "scanner.h"
+#include "scanner/scanner.h"
 
 using namespace std;
 
@@ -14,6 +14,7 @@ int main()
     for(auto token:tokens)
     {
         TokenType type = token.getType();
+        //cout<<token.getName()<<endl;
         if(type==TokenType::ID||type==TokenType::FLOAT||type==TokenType::INT||type==TokenType::CHAR||type==TokenType::STRING)
             cout<<"("<<TokenCode[TokenDict[token.getType()]]<<","<<token.getName()<<")";
         else

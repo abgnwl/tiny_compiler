@@ -5,6 +5,7 @@
 static std::set<std::string> keyWordSet = {
     "break",
     "char",
+    "string",
     "const",
     "continue",
     "else",

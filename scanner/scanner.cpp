@@ -166,10 +166,28 @@ void Scanner::dealOperator(std::string &name, TokenType &type)
 
 void Scanner::dealDelimiter(std::string &name, TokenType &type)
 {
-    name+=*iter;
-    iter++;
-    type = TokenType::DELIMITER;
-    proc = Process::END;
+    if(*iter=='"')
+    {
+        name+=*iter;
+        iter++;
+        proc = Process::IN_STRING;
+        dealString(name,type);
+    }
+    else if(*iter=='\'')
+    {
+        name+=*iter;
+        iter++;
+        proc = Process::IN_CHAR;
+        dealChar(name,type);
+    }
+    else
+    {
+        name+=*iter;
+        iter++;
+        type = TokenType::DELIMITER;
+        proc = Process::END;
+    }
+
 }
 
 Token Scanner::dealEnd(const std::string &name, const TokenType &type)
@@ -181,31 +199,22 @@ void Scanner::dealString(std::string &name, TokenType &type)
 {
     if(*iter=='"')
     {
-        iter++;
         type = TokenType::STRING;
         proc = Process::END;
     }
-    else
-    {
-        name+=*iter;
-        iter++;
-    }
+    name+=*iter;
+    iter++;
 }
 
 void Scanner::dealChar(std::string &name, TokenType &type)
 {
-    if(*iter=='"')
+    if(*iter=='\'')
     {
-        iter++;
         type = TokenType::CHAR;
         proc = Process::END;
     }
-    else
-    {
-        name+=*iter;
-        iter++;
-    }
-
+    name+=*iter;
+    iter++;
 }
 
 bool Scanner::openFile(const std::string &FileName)
