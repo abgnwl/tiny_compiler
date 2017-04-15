@@ -38,7 +38,7 @@ static std::vector<std::string> TokenStringType =
     //constant
     "INT","FLOAT","CHAR","STRING",
     //id
-    "id",
+    "ID",
     //operator
     "+","-","*","/","&","^","~","|","&","++","--","||","&&","!","==","!=","<",">","<=",">=","=",
     //delimiter

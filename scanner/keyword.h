@@ -2,7 +2,8 @@
 #define KEYWORD_H_INCLUDED
 
 #include <set>
-static std::set<std::string> keyWordSet = {
+static std::set<std::string> keyWordSet =
+{
     "break",
     "char",
     "string",
@@ -19,6 +20,6 @@ static std::set<std::string> keyWordSet = {
     "unsigned",
     "void",
     "include"   //is this a keyword?
-    };
+};
 
 #endif // KEYWORD_H_INCLUDED
