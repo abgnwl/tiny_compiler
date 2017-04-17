@@ -10,6 +10,17 @@ class Parser
 private:
     std::vector<Production> Grammar;
 public:
+    Parser(){}
+    Parser(std::vector<Production> Grammar)
+    {
+        this->Grammar = Grammar;
+    }
+
+
+    void getGrammar()
+    {
+
+    }
 
 
 };

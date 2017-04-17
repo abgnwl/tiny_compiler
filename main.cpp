@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
     Scanner scanner;
-    string FileName = "D:/Workspace/Tiny_Compiler/bin/Debug/test.cpp";
+    string FileName = "test.cpp";
 
     auto tokens = scanner.getTokens(FileName);
 
