@@ -11,21 +11,12 @@ int main()
     if(parser.openFile("parser/grammar.txt"))
         cout<<"ok"<<endl;
 
-    auto e = parser.getFirst(vector<string>{"S","L"});
-    for(auto i:e)
-        cout<<"first S="<<i<<endl;
-
-    auto ret = parser.getClosure(LR1item(LR0item(0,0),"$"));
-    for(auto i:ret)
+    /*auto k = parser.getClosure(LR1item(LR0item(0,0),"$"));
+    for(auto i:k)
     {
-        auto j=i.getLeft().getLeft();
-        int pos = i.getLeft().getRight();
-        auto grammar = parser.getGrammar();
-        cout<<grammar[j].getLeft();
-        cout<<"->";
-        for(auto str:grammar[j].getRight())cout<<str<<" ";
-        cout<<" point at"<<pos<<","<<i.getRight()<<endl;
-    }
+        cout<<"id="<<i.getLeft().getLeft()<<" point="<<i.getLeft().getRight()<<"  symbol="<<i.getRight()<<endl;
+    }*/
+    parser.build();
     /*
     Scanner scanner;
     string FileName = "test.cpp";

@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <cctype>
+#include <queue>
 #define test
 
 #ifdef test
@@ -66,6 +67,86 @@ std::set<std::string> Parser::getFirst(const std::vector<std::string> &beta)
     if(isAllEmpty)
         ret.insert("@");
     return ret;
+}
+
+void Parser::build()
+{
+    if(closuremap.size()!=0)
+        return;
+
+    auto closure0 = getClosure(LR1item(LR0item(0,0),"$"));
+    std::queue<LR1set> q;
+    q.push(closure0);
+    closuremap[closure0] = closuremap.size();
+
+    //closurelist.push_back(getClosure(LR1item(LR0item(0,0),"$")));
+    //closuremap[closurelist[0]]=closurelist.size()-1;
+
+    while(!q.empty())
+    {
+        auto lr1set = q.front();
+        q.pop();
+        cout<<"head"<<endl;
+        for(auto i:lr1set)cout<<"id="<<i.getLeft().getLeft()<<" point="<<i.getLeft().getRight()<<"  symbol="<<i.getRight()<<endl;
+        transfer.push_back(vpsi());
+
+        for(auto terminal:terminalSet)
+        {
+            LR1set newset;
+            for(auto lr1:lr1set)
+            {
+                auto lr0 = lr1.getLeft();
+                auto id = lr0.getLeft();
+                auto pointpos = lr0.getRight();
+                if(grammar[id].getRight().size()!=pointpos && grammar[id].getRight()[pointpos]==terminal)
+                {
+                    newset.insert(LR1item(LR0item(id,pointpos+1),lr1.getRight()));
+                }
+            }
+            if(newset.size()!=0)
+            {
+
+                getClosure(newset);
+                if(closuremap.find(newset)==closuremap.end())
+                {
+                    //closurelist.push_back(newset);
+                    closuremap[newset]=closuremap.size();
+                    //cout<<"push newset, terminal=|"<<terminal<<endl;
+                    //for(auto i:newset)cout<<"id="<<i.getLeft().getLeft()<<" point="<<i.getLeft().getRight()<<"  symbol="<<i.getRight()<<endl;
+                    q.push(newset);
+                }
+                transfer[transfer.size()-1].push_back(std::make_pair(terminal,closuremap[newset]));
+            }
+        }
+
+        for(auto variable:variableSet)
+        {
+            LR1set newset;
+            for(auto lr1:lr1set)
+            {
+                auto lr0 = lr1.getLeft();
+                auto id = lr0.getLeft();
+                auto pointpos = lr0.getRight();
+                if(grammar[id].getRight().size()>pointpos && grammar[id].getRight()[pointpos]==variable)
+                {
+                    newset.insert(LR1item(LR0item(id,pointpos+1),lr1.getRight()));
+                }
+            }
+            if(newset.size()!=0)
+            {
+                getClosure(newset);
+                if(closuremap.find(newset)==closuremap.end())
+                {
+                    //closurelist.push_back(newset);
+                    closuremap[newset]=closuremap.size();
+                    //cout<<"push newset, variable=|"<<variable<<endl;
+                    //for(auto i:newset)cout<<"id="<<i.getLeft().getLeft()<<" point="<<i.getLeft().getRight()<<"  symbol="<<i.getRight()<<endl;
+                    q.push(newset);
+                }
+                transfer[transfer.size()-1].push_back(make_pair(variable,closuremap[newset]));
+            }
+        }
+    }
 }
 
 bool Parser::openFile(const std::string &fileName)
@@ -170,18 +251,13 @@ void Parser::getClosure(std::set<LR1item> &closure)
         else
             closure = temp;
     }
-
+/*
     if(closuremap.find(closure) == closuremap.end())
     {
         closurelist.push_back(closure);
         closuremap[closure] = closurelist.size();
     }
-}
-
-
-std::set<LR1item> Parser::getGo(const std::set<LR1item> &closure, const std::string &variable)
-{
-
+    */
 }
 
 
@@ -196,7 +272,7 @@ std::map< std::set<LR1item>, int> Parser::getClosuremap()
 }
 
 
-std::vector< std::vector<int> > Parser::getTransfer()
+std::vector< vpsi > Parser::getTransfer()
 {
     return transfer;
 }

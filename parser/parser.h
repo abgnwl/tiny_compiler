@@ -8,16 +8,20 @@
 #include <set>
 #include <map>
 
+typedef std::pair<std::string, int> psi;
+typedef std::vector<psi> vpsi;
+typedef std::set<LR1item> LR1set;
+
 class Parser
 {
 private:
-    std::vector<Production> grammar;
-    std::vector< std::set<LR1item> > closurelist;
-    std::map< std::set<LR1item>, int> closuremap;
-    std::vector< std::vector<int> > transfer;
+    std::vector<Production> grammar;    //store grammar
+    std::vector< LR1set > closurelist;  //closure list
+    std::map< LR1set, int> closuremap;  //closure map
+    std::vector< vpsi > transfer;       //transfer function
 public:
-
-std::set<std::string> getFirst(const std::vector<std::string> &beta);
+    void build();
+    std::set<std::string> getFirst(const std::vector<std::string> &beta);
 
     Parser(){}
     Parser(std::vector<Production> grammar)
@@ -32,13 +36,11 @@ std::set<std::string> getFirst(const std::vector<std::string> &beta);
     std::set<LR1item> getClosure(const LR1item &item);
     void getClosure(std::set<LR1item> &closure);
 
-    std::set<LR1item> getGo(const std::set<LR1item> &closure, const std::string &variable);
-
-
     std::vector< std::set<LR1item> > getClosurelist();
     std::map< std::set<LR1item>, int> getClosuremap();
-    std::vector< std::vector<int> > getTransfer();
+    std::vector< vpsi > getTransfer();
 
+    int analyse();
 
 };
 #endif // PARSER_H_INCLUDED
