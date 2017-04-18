@@ -15,7 +15,7 @@ private:
     std::vector< std::set<LR1item> > closurelist;
     std::map< std::set<LR1item>, int> closuremap;
     std::vector< std::vector<int> > transfer;
-
+    std::vector<std::string> getFirst(const std::vector<std::string> &beta);
 public:
     Parser(){}
     Parser(std::vector<Production> grammar)
@@ -27,7 +27,7 @@ public:
     bool openFile(const std::string &fileName);
     std::vector<Production> getGrammar();
 
-    void getClosure(const LR1item &item);
+    std::set<LR1item> getClosure(const LR1item &item);
     void getClosure(std::set<LR1item> &closure);
 
     std::set<LR1item> getGo(const std::set<LR1item> &closure, const std::string &variable);

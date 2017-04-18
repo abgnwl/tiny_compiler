@@ -23,7 +23,8 @@ public:
     }
 
     std::pair<int, int> getItem() const;
-
+    int getLeft();
+    int getRight();
     bool operator==(const LR0item &item) const;
 };
 
@@ -46,7 +47,8 @@ public:
     }
 
     std::pair<LR0item, std::string> getItem() const;
-
+    LR0item getLeft();
+    std::string getRight();
     bool operator==(const LR1item &item) const;
 };
 
