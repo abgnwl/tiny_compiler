@@ -20,8 +20,8 @@ public:
         this->right = right;
     }
 
-    std::string getLeft();
-    std::vector<std::string> getRight();
+    std::string getLeft() const;
+    std::vector<std::string> getRight() const;
     void setLeft(std::string left);
     void setRight(std::vector<std::string> right);
     void addRight(std::string rightOne);

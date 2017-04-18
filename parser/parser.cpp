@@ -13,18 +13,59 @@
 using namespace std;
 #endif // test
 
-std::vector<std::string> Parser::getFirst(const std::vector<std::string> &beta)
+std::set<std::string> Parser::getFirst(const std::vector<std::string> &beta)
 {
-    std::vector<std::string> first;
+    if(terminalSet.find(beta[0])!=terminalSet.end() || beta[0]=="@")
+        return std::set<std::string>{beta[0]};
+
+    std::set<std::string> ret;
+    bool isAllEmpty = 1;
     for(auto str:beta)
     {
         if(terminalSet.find(str)!=terminalSet.end())
         {
-            first.push_back(str);
-            return first;
+            isAllEmpty = 0;
+            ret.insert(str);
+            return ret;
         }
         else
+        {
+            bool isEmpty = 0;
+            for(auto production:grammar)
+                if(production.getLeft()==str)
+                {
+                    auto right = production.getRight();
+
+                    if(right.size()==1 && right[0]=="@")
+                    {
+                        isEmpty = 1;
+                        continue;
+                    }
+                    if(terminalSet.find(right[0])!=terminalSet.end())
+                    {
+                        ret.insert(right[0]);
+                        continue;
+                    }
+                    else
+                    {
+                        auto first = getFirst(right);
+                        for(auto one:first)
+                            if(one!="@")
+                                ret.insert(one);
+                            else
+                                isEmpty = 1;
+                    }
+                }
+            if(!isEmpty)
+            {
+                isAllEmpty = 0;
+                break;
+            }
+        }
     }
+    if(isAllEmpty)
+        ret.insert("@");
+    return ret;
 }
 
 bool Parser::openFile(const std::string &fileName)
@@ -36,6 +77,8 @@ bool Parser::openFile(const std::string &fileName)
         std::string str;
         while(getline(in,str))
         {
+            if(str=="")
+                continue;
             std::string temp;
             Production production;
             auto iter = str.cbegin();
@@ -79,6 +122,7 @@ std::set<LR1item> Parser::getClosure(const LR1item &item)
 {
     std::set<LR1item> closure = {item};
     getClosure(closure);
+    return closure;
 }
 
 void Parser::getClosure(std::set<LR1item> &closure)
@@ -94,20 +138,20 @@ void Parser::getClosure(std::set<LR1item> &closure)
             LR0item lr0 = lr1.getLeft();
             std::string lookahead = lr1.getRight();
 
-            int pointPos = lr0.getRight();
+            unsigned int pointPos = lr0.getRight();
             auto right = grammar[lr0.getLeft()].getRight();
 
             if(pointPos!=right.size() && variableSet.find(right[pointPos])!=variableSet.end())
             {
                 std::string B = right[pointPos];
                 std::vector<std::string> beta;
-                for(int i = pointPos+1; i<right.size(); i++)
+                for(unsigned int i = pointPos+1; i<right.size(); i++)
                     beta.push_back(right[i]);
                 beta.push_back(lookahead);
 
                 auto first = getFirst(beta);
 
-                for(int productionID = 0; productionID<grammar.size(); productionID++)
+                for(unsigned int productionID = 0; productionID<grammar.size(); productionID++)
                 {
                     const Production &production = grammar[productionID];
                     if(production.getLeft() == B)

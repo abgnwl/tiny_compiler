@@ -15,8 +15,10 @@ private:
     std::vector< std::set<LR1item> > closurelist;
     std::map< std::set<LR1item>, int> closuremap;
     std::vector< std::vector<int> > transfer;
-    std::vector<std::string> getFirst(const std::vector<std::string> &beta);
 public:
+
+std::set<std::string> getFirst(const std::vector<std::string> &beta);
+
     Parser(){}
     Parser(std::vector<Production> grammar)
     {

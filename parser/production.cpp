@@ -1,11 +1,11 @@
 #include "production.h"
 
-std::string Production::getLeft()
+std::string Production::getLeft() const
 {
     return left;
 }
 
-std::vector<std::string> Production::getRight()
+std::vector<std::string> Production::getRight() const
 {
     return right;
 }

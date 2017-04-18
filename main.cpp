@@ -10,13 +10,21 @@ int main()
     Parser parser;
     if(parser.openFile("parser/grammar.txt"))
         cout<<"ok"<<endl;
-    auto now = parser.getGrammar();
-    for(auto i:now)
+
+    auto e = parser.getFirst(vector<string>{"S","L"});
+    for(auto i:e)
+        cout<<"first S="<<i<<endl;
+
+    auto ret = parser.getClosure(LR1item(LR0item(0,0),"$"));
+    for(auto i:ret)
     {
-        cout<<i.getLeft()<<" ";
-        for(auto j:i.getRight())
-            cout<<j<<" ";
-        cout<<endl;
+        auto j=i.getLeft().getLeft();
+        int pos = i.getLeft().getRight();
+        auto grammar = parser.getGrammar();
+        cout<<grammar[j].getLeft();
+        cout<<"->";
+        for(auto str:grammar[j].getRight())cout<<str<<" ";
+        cout<<" point at"<<pos<<","<<i.getRight()<<endl;
     }
     /*
     Scanner scanner;
@@ -36,7 +44,7 @@ int main()
         cout<<"    "<<token.getName()<<" "<<TokenDict[token.getType()]<<"  "<<token.getLine()<<endl;
     }
     */
-    getchar();
+    //getchar();
 
     return 0;
 }
