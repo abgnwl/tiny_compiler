@@ -22,7 +22,6 @@ bool Parser::openFile(const std::string &fileName)
         std::string str;
         while(getline(in,str))
         {
-            cout<<"get str="<<str<<"|"<<endl;
             std::string temp;
             Production production;
             auto iter = str.cbegin();
@@ -60,4 +59,41 @@ bool Parser::openFile(const std::string &fileName)
 std::vector<Production> Parser::getGrammar()
 {
     return grammar;
+}
+
+void Parser::Closure(const LR1item &item)
+{
+
+}
+
+void Parser::Closure(std::set<LR1item> &closure)
+{
+
+}
+
+void Parser::getClosure(std::set<LR1item> &closure)
+{
+
+}
+
+std::set<LR1item> Parser::Go(const std::set<LR1item> &closure, const std::string &variable)
+{
+
+}
+
+
+std::vector< std::set<LR1item> > Parser::getClosurelist()
+{
+    return closurelist;
+}
+
+std::map< std::set<LR1item>, int> Parser::getClosuremap()
+{
+    return closuremap;
+}
+
+
+std::vector< std::vector<int> > Parser::getTransfer()
+{
+    return transfer;
 }

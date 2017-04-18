@@ -29,3 +29,4 @@ size_t Token::getLine()
 {
     return this->line;
 }
+

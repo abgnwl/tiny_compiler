@@ -6,6 +6,9 @@
 
 static std::set<std::string> terminalSet =
 {
+    "@",    //NULL
+    "$",    //END
+
     "=",
     "*",
     "i"
