@@ -8,19 +8,17 @@
 class Parser
 {
 private:
-    std::vector<Production> Grammar;
+    std::vector<Production> grammar;
 public:
     Parser(){}
-    Parser(std::vector<Production> Grammar)
+    Parser(std::vector<Production> grammar)
     {
-        this->Grammar = Grammar;
+        this->grammar = grammar;
     }
 
 
-    void getGrammar()
-    {
-
-    }
+    bool openFile(const std::string &fileName);
+    std::vector<Production> getGrammar();
 
 
 };

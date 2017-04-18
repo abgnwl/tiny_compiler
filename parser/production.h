@@ -24,6 +24,7 @@ public:
     std::vector<std::string> getRight();
     void setLeft(std::string left);
     void setRight(std::vector<std::string> right);
+    void addRight(std::string rightOne);
 };
 
 #endif // GRAMMAR_H_INCLUDED

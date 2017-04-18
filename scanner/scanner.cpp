@@ -14,7 +14,7 @@ void Scanner::skipBlank()
             iter++;
             line++;
         }
-        else if(*iter==' ' || *iter=='\t')
+        else if(isblank(*iter))
         {
             iter++;
         }

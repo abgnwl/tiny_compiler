@@ -20,3 +20,7 @@ void Production::setRight(std::vector<std::string> right)
     this->right = right;
 }
 
+void Production::addRight(std::string rightOne)
+{
+    right.push_back(rightOne);
+}

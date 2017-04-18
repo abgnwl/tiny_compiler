@@ -4,7 +4,7 @@
 #include <set>
 #include <string>
 
-static std::set<std::string> TerminalSet =
+static std::set<std::string> terminalSet =
 {
     "=",
     "*",

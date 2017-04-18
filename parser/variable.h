@@ -4,7 +4,7 @@
 #include <set>
 #include <string>
 
-static std::set<std::string> VariableSet =
+static std::set<std::string> variableSet =
 {
     "S_",
     "S",

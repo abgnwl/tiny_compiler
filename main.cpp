@@ -1,11 +1,23 @@
 #include <iostream>
 #include <cstdio>
 #include "scanner/scanner.h"
-
+#include "parser/parser.h"
 using namespace std;
 
 int main()
 {
+    Parser parser;
+    if(parser.openFile("parser/grammar.txt"))
+        cout<<"ok"<<endl;
+    auto now = parser.getGrammar();
+    for(auto i:now)
+    {
+        cout<<i.getLeft()<<" ";
+        for(auto j:i.getRight())
+            cout<<j<<" ";
+        cout<<endl;
+    }
+    /*
     Scanner scanner;
     string FileName = "test.cpp";
 
@@ -22,6 +34,8 @@ int main()
 
         cout<<"    "<<token.getName()<<" "<<TokenDict[token.getType()]<<"  "<<token.getLine()<<endl;
     }
+    */
     getchar();
+
     return 0;
 }
