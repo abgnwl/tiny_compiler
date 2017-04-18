@@ -61,22 +61,44 @@ std::vector<Production> Parser::getGrammar()
     return grammar;
 }
 
-void Parser::Closure(const LR1item &item)
+void Parser::getClosure(const LR1item &item)
 {
-
-}
-
-void Parser::Closure(std::set<LR1item> &closure)
-{
-
+    std::set<LR1item> closure = {item};
+    Closure(closure);
 }
 
 void Parser::getClosure(std::set<LR1item> &closure)
 {
+    std::set<LR1item> temp;
 
+    for(;;)
+    {
+        temp = closure;
+
+        for(auto item:closure)
+            for(auto production:grammar)
+                for(auto )
+                {
+
+                    if(closure.find()==closure.end())
+                        temp.insert()
+                }
+
+        if(temp==closure)
+            break;
+        else
+            closure = temp;
+    }
+
+    if(closuremap.find(closure) == closuremap.end())
+    {
+        closurelist.push_back(closure);
+        closuremap[closure] = closurelist.size();
+    }
 }
 
-std::set<LR1item> Parser::Go(const std::set<LR1item> &closure, const std::string &variable)
+
+std::set<LR1item> Parser::getGo(const std::set<LR1item> &closure, const std::string &variable)
 {
 
 }

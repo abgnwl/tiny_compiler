@@ -27,11 +27,10 @@ public:
     bool openFile(const std::string &fileName);
     std::vector<Production> getGrammar();
 
-    void Closure(const LR1item &item);
-    void Closure(std::set<LR1item> &closure);
+    void getClosure(const LR1item &item);
     void getClosure(std::set<LR1item> &closure);
 
-    std::set<LR1item> Go(const std::set<LR1item> &closure, const std::string &variable);
+    std::set<LR1item> getGo(const std::set<LR1item> &closure, const std::string &variable);
 
 
     std::vector< std::set<LR1item> > getClosurelist();
