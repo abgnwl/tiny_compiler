@@ -35,11 +35,11 @@ public:
     }
 
     void setName(const std::string &name);
-    std::string getName();
+    std::string getName() const;
     void setType(TokenType type);
     TokenType getType();
     void setLine(size_t line);
-    size_t getLine();
+    size_t getLine() const;
 };
 
 

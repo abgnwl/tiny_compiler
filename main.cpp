@@ -21,7 +21,6 @@ void getToken()
             cout<<"("<<TokenCode[TokenDict[token.getType()]]<<","<<token.getName()<<")";
         else
             cout<<"("<<TokenCode[token.getName()]<<", )";
-
         cout<<"    "<<token.getName()<<" "<<TokenDict[token.getType()]<<"  "<<token.getLine()<<endl;
     }
 }
@@ -83,8 +82,18 @@ void getGrammar()
     }
 }
 
+void analyse()
+{
+    Scanner scanner;
+    auto tokens = scanner.getTokens("test.cpp");
+    for(auto i:tokens)cout<<i.getName()<<" ";cout<<endl;
+    Parser parser;
+    parser.openFile("parser/grammar.txt");
+    cout<<parser.analyse(tokens)<<endl;
+}
 int main()
 {
-    getGrammar();
+    getToken();
+    //analyse();
     return 0;
 }

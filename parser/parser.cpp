@@ -8,19 +8,53 @@
 #include <cctype>
 #include <queue>
 #include <stack>
-//#define test
+#define test
 
 #ifdef test
 #include <iostream>
 using namespace std;
 #endif // test
 
-int Parser::analyse(const vector<Token> &tokens)
+int Parser::analyse(const std::vector<Token> &tokens)
 {
     build();
-    std::stack<std::pair<unsigned int, std::string>> analysestack;
-    analysestack.push()
+    std::stack<std::pair<unsigned int, std::string>> st;
+    st.push({0,"$"});
 
+    auto iter = tokens.cbegin();
+    for(;;)
+    {
+        auto I = st.top().first;
+        if(action[I].find(iter->getName())!=action[I].end())
+        {
+            auto act = action[I][iter->getName()];
+            if(act.first=="S")
+            {
+                st.push({act.second,iter->getName()});
+                iter++;
+            }
+            else if(act.first=="r")
+            {
+                auto id = act.second;
+                auto right = grammar[id].getRight();
+                for(unsigned int i=0; i<right.size(); i++)
+                    st.pop();
+                auto newI = st.top().first;
+                st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
+            }
+            else if(act.first=="acc")
+            {
+                cout<<"Accept!"<<endl;
+                return 0;
+            }
+        }
+        else
+        {
+            cout<<"ERROR! at line "<<iter->getLine()<<endl;
+            return iter->getLine();
+        }
+    }
+    return 0;
 }
 
 std::set<std::string> Parser::getFirst(const std::vector<std::string> &beta)

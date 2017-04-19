@@ -5,7 +5,7 @@ void Token::setName(const std::string &name)
     this->name = name;
 }
 
-std::string Token::getName()
+std::string Token::getName() const
 {
     return this->name;
 }
@@ -25,7 +25,7 @@ void Token::setLine(size_t line)
     this->line = line;
 }
 
-size_t Token::getLine()
+size_t Token::getLine() const
 {
     return this->line;
 }

@@ -294,5 +294,6 @@ std::vector<Token> Scanner::getTokens(const std::string FileName)
             tokens.push_back(token);
         }
     }
+    tokens.push_back(Token("$",TokenType::OPERATOR,0));
     return tokens;
 }

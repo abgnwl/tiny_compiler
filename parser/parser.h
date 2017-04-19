@@ -41,7 +41,7 @@ public:
     std::vector< vpsi > getTransfer();
     std::vector< std::map<std::string, psi>> getAction();
     std::vector< std::map<std::string, int>> getGo();
-    int analyse();
+    int analyse(const std::vector<Token> &tokens);
 
 };
 #endif // PARSER_H_INCLUDED
