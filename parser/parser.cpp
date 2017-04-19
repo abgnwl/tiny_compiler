@@ -7,13 +7,21 @@
 #include <fstream>
 #include <cctype>
 #include <queue>
-
+#include <stack>
 //#define test
 
 #ifdef test
 #include <iostream>
 using namespace std;
 #endif // test
+
+int Parser::analyse(const vector<Token> &tokens)
+{
+    build();
+    std::stack<std::pair<unsigned int, std::string>> analysestack;
+    analysestack.push()
+
+}
 
 std::set<std::string> Parser::getFirst(const std::vector<std::string> &beta)
 {
