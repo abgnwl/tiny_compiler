@@ -3,6 +3,7 @@
 
 #include "production.h"
 #include "lritem.h"
+#include "../scanner/token.h"
 #include <vector>
 #include <string>
 #include <set>
@@ -19,27 +20,27 @@ private:
     std::vector< LR1set > closurelist;  //closure list
     std::map< LR1set, int> closuremap;  //closure map
     std::vector< vpsi > transfer;       //transfer function
-public:
-    void build();
+    std::vector< std::map<std::string, psi>> action;
+    std::vector< std::map<std::string, int>> go;
+
     std::set<std::string> getFirst(const std::vector<std::string> &beta);
+    std::set<LR1item> getClosure(const LR1item &item);
+    void getClosure(LR1set &closure);
 
+public:
     Parser(){}
-    Parser(std::vector<Production> grammar)
-    {
-        this->grammar = grammar;
-    }
-
 
     bool openFile(const std::string &fileName);
+    void build();
+
     std::vector<Production> getGrammar();
 
-    std::set<LR1item> getClosure(const LR1item &item);
-    void getClosure(std::set<LR1item> &closure);
 
-    std::vector< std::set<LR1item> > getClosurelist();
-    std::map< std::set<LR1item>, int> getClosuremap();
+    std::vector< LR1set > getClosurelist();
+    std::map< LR1set, int> getClosuremap();
     std::vector< vpsi > getTransfer();
-
+    std::vector< std::map<std::string, psi>> getAction();
+    std::vector< std::map<std::string, int>> getGo();
     int analyse();
 
 };

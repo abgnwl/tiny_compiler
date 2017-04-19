@@ -7,7 +7,8 @@
 #include <fstream>
 #include <cctype>
 #include <queue>
-#define test
+
+//#define test
 
 #ifdef test
 #include <iostream>
@@ -140,6 +141,46 @@ void Parser::build()
             }
         }
     }
+
+    for(unsigned int i=0; i<closurelist.size(); i++)
+    {
+        action.push_back(std::map<std::string, psi>());
+        go.push_back(std::map<std::string, int>());
+
+        for(auto lr1:closurelist[i])
+        {
+            auto point = lr1.getLeft().getRight();
+            auto right = grammar[lr1.getLeft().getLeft()].getRight();
+            if(point < right.size() && terminalSet.find(right[point])!=terminalSet.end())
+            {
+                for(auto go:transfer[i])
+                    if(go.first==right[point])
+                        action[i][right[point]]=std::make_pair("S",go.second);
+            }
+        }
+
+        for(auto tf:transfer[i])
+        {
+            if(variableSet.find(tf.first)!=variableSet.end())
+                go[i][tf.first]=tf.second;
+        }
+
+        for(auto lr1:closurelist[i])
+        {
+            auto lookahead = lr1.getRight();
+            auto lr0 = lr1.getLeft();
+            auto id = lr0.getLeft();
+            auto point = lr0.getRight();
+            auto right = grammar[id].getRight();
+
+            if(point == right.size())
+            {
+                action[i][lookahead]=std::make_pair("r",id);
+                if(lookahead=="$" && id==0)
+                    action[i][lookahead]=std::make_pair("acc",0);
+            }
+        }
+    }
 }
 
 bool Parser::openFile(const std::string &fileName)
@@ -256,8 +297,17 @@ std::map< std::set<LR1item>, int> Parser::getClosuremap()
     return closuremap;
 }
 
-
 std::vector< vpsi > Parser::getTransfer()
 {
     return transfer;
+}
+
+std::vector< std::map<std::string, psi>> Parser::getAction()
+{
+    return action;
+}
+
+std::vector< std::map<std::string, int>> Parser::getGo()
+{
+    return go;
 }

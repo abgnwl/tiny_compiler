@@ -69,6 +69,18 @@ void getGrammar()
             }
         }
     }
+
+    auto action = parser.getAction();
+    auto go = parser.getGo();
+    for(unsigned int i=0;i<action.size();i++)
+    {
+        cout<<"I"<<i<<" ";
+        for(auto one:action[i])
+            cout<<one.first<<","<<one.second.first<<one.second.second<<" ";
+        for(auto one:go[i])
+            cout<<one.first<<","<<one.second<<" ";
+        cout<<endl;
+    }
 }
 
 int main()
