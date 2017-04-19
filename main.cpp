@@ -5,19 +5,9 @@
 
 using namespace std;
 
-int main()
-{
-    Parser parser;
-    if(parser.openFile("parser/grammar.txt"))
-        cout<<"ok"<<endl;
 
-    /*auto k = parser.getClosure(LR1item(LR0item(0,0),"$"));
-    for(auto i:k)
-    {
-        cout<<"id="<<i.getLeft().getLeft()<<" point="<<i.getLeft().getRight()<<"  symbol="<<i.getRight()<<endl;
-    }*/
-    parser.build();
-    /*
+void getToken()
+{
     Scanner scanner;
     string FileName = "test.cpp";
 
@@ -34,8 +24,55 @@ int main()
 
         cout<<"    "<<token.getName()<<" "<<TokenDict[token.getType()]<<"  "<<token.getLine()<<endl;
     }
-    */
-    //getchar();
+}
 
+void getGrammar()
+{
+    Parser parser;
+    if(parser.openFile("parser/grammar.txt"))
+        cout<<"ok"<<endl;
+    parser.build();
+    auto grammar = parser.getGrammar();
+    auto closurelist = parser.getClosurelist();
+    auto closuremap = parser.getClosuremap();
+    for(auto lr1set:closurelist)
+    {
+        cout<<"I"<<closuremap[lr1set]<<endl;
+        for(auto lr1:lr1set)
+        {
+            cout<<"  ";
+            auto id = lr1.getLeft().getLeft();
+            auto point = lr1.getLeft().getRight();
+            auto str = lr1.getRight();
+            cout<<grammar[id].getLeft()<<"->";
+            auto right = grammar[id].getRight();
+            for(unsigned int i=0;i<right.size();i++)
+            {
+                if(i==point)
+                    cout<<".";
+                cout<<right[i];
+            }
+            if(point==right.size())
+                cout<<".";
+            cout<<"|"<<str<<endl;
+        }
+    }
+    auto transfer = parser.getTransfer();
+    for(unsigned int i=0;i<transfer.size();i++)
+    {
+        if(transfer[i].size())
+        {
+            cout<<"from I"<<i<<":"<<endl;
+            for(auto e:transfer[i])
+            {
+                cout<<"  str=|"<<e.first<<"|  to  I"<<e.second<<endl;
+            }
+        }
+    }
+}
+
+int main()
+{
+    getGrammar();
     return 0;
 }

@@ -28,10 +28,6 @@ public:
     unsigned int getRight() const;
     bool operator==(const LR0item &item) const;
     bool operator<(const LR0item &item) const;
-    friend std::ostream& operator<<(std::ostream& out, const LR0item &item)
-    {
-        out<<"id="<<item.getLeft()<<" point="<<item.getRight();
-    }
 };
 
 class LR1item
@@ -57,10 +53,6 @@ public:
     std::string getRight() const;
     bool operator==(const LR1item &item) const;
     bool operator<(const LR1item &item) const;
-    friend std::ostream& operator<<(std::ostream &out, const LR1item &item)
-    {
-        out<<item.getLeft()<<"  symbol="<<item.getRight();
-    }
 };
 
 #endif // LR1ITEM_H_INCLUDED
