@@ -93,7 +93,7 @@ void analyse()
 }
 int main()
 {
-    getToken();
-    //analyse();
+    getGrammar();
+    analyse();
     return 0;
 }
