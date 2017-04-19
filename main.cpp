@@ -56,6 +56,7 @@ void getGrammar()
             cout<<"|"<<str<<endl;
         }
     }
+    cout<<endl;
     auto transfer = parser.getTransfer();
     for(unsigned int i=0;i<transfer.size();i++)
     {
@@ -68,7 +69,7 @@ void getGrammar()
             }
         }
     }
-
+    cout<<endl;
     auto action = parser.getAction();
     auto go = parser.getGo();
     for(unsigned int i=0;i<action.size();i++)
@@ -80,6 +81,7 @@ void getGrammar()
             cout<<one.first<<","<<one.second<<" ";
         cout<<endl;
     }
+    cout<<endl;
 }
 
 void analyse()

@@ -41,6 +41,7 @@ int Parser::analyse(const std::vector<Token> &tokens)
                     st.pop();
                 auto newI = st.top().first;
                 st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
+                cout<<"use production: "<<grammar[id].getLeft()<<"->";for(auto e:right)cout<<e;cout<<endl;
             }
             else if(act.first=="acc")
             {
