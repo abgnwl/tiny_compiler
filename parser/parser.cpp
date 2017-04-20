@@ -197,14 +197,25 @@ void Parser::build()
             {
                 for(auto go:transfer[i])
                     if(go.first==right[point])
+                    {
+                        if(action[i].find(right[point])!=action[i].end() && action[i][right[point]]!=std::pair<std::string, int>("S",go.second))
+                            cout<<"error 1 at action["<<i<<"]["<<right[point]<<"]=S"<<go.second<<"  old="<<action[i][right[point]].first<<action[i][right[point]].second<<endl;
+
                         action[i][right[point]]=std::make_pair("S",go.second);
+                    }
             }
         }
 
         for(auto tf:transfer[i])
         {
             if(variableSet.find(tf.first)!=variableSet.end())
+            {
+                if(go[i].find(tf.first)!=go[i].end())
+                    cout<<"error at go["<<i<<"]["<<tf.first<<"]"<<endl;
+
                 go[i][tf.first]=tf.second;
+
+            }
         }
 
         for(auto lr1:closurelist[i])
@@ -217,9 +228,18 @@ void Parser::build()
 
             if(point == right.size())
             {
+                if(action[i].find(lookahead)!=action[i].end() && action[i][lookahead]!=std::pair<std::string,int>("r",id))
+                    cout<<"error 2 at action["<<i<<"]["<<lookahead<<"]=r"<<id<<" old="<<action[i][lookahead].first<<action[i][lookahead].second<<endl;
+
                 action[i][lookahead]=std::make_pair("r",id);
+
                 if(lookahead=="$" && id==0)
+                {
+                    //if(action[i].find(lookahead)!=action[i].end())
+                    //cout<<"error 3 at action["<<i<<"]["<<lookahead<<"]=acc"<<endl;
+
                     action[i][lookahead]=std::make_pair("acc",0);
+                }
             }
         }
     }

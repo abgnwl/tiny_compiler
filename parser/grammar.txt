@@ -1,14 +1,15 @@
 [terminal]
-* = i $
+$ a b c d
 
 [variable]
-S_ S L R
+S_ S A B
 
 [production]
 S_ S
-S L = R
-S R
-L * R
-L i
-R L
+S b A S B
+S b A
+A d S a
+A b
+B c A a
+B c
 
