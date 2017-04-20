@@ -1,7 +1,5 @@
 #include "parser.h"
 #include "production.h"
-#include "variable.h"
-#include "terminal.h"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -118,6 +116,7 @@ void Parser::build()
         return;
 
     auto closure0 = getClosure(LR1item(LR0item(0,0),"$"));
+
     std::queue<LR1set> q;
     q.push(closure0);
 
@@ -132,31 +131,6 @@ void Parser::build()
         auto lr1set = q.front();
         q.pop();
         transfer.push_back(vpsi());
-
-        for(auto terminal:terminalSet)
-        {
-            LR1set newset;
-            for(auto lr1:lr1set)
-            {
-                auto lr0 = lr1.getLeft();
-                auto id = lr0.getLeft();
-                auto pointpos = lr0.getRight();
-                if(grammar[id].getRight().size()!=pointpos && grammar[id].getRight()[pointpos]==terminal)
-                    newset.insert(LR1item(LR0item(id,pointpos+1),lr1.getRight()));
-            }
-            if(newset.size()!=0)
-            {
-                getClosure(newset);
-                if(closuremap.find(newset)==closuremap.end())
-                {
-                    closurelist.push_back(newset);
-                    closuremap.insert(make_pair(newset,closuremap.size()));
-                    //closuremap[newset]=closuremap.size();
-                    q.push(newset);
-                }
-                transfer[transfer.size()-1].push_back(std::make_pair(terminal,closuremap[newset]));
-            }
-        }
 
         for(auto variable:variableSet)
         {
@@ -180,6 +154,31 @@ void Parser::build()
                     q.push(newset);
                 }
                 transfer[transfer.size()-1].push_back(make_pair(variable,closuremap[newset]));
+            }
+        }
+
+        for(auto terminal:terminalSet)
+        {
+            LR1set newset;
+            for(auto lr1:lr1set)
+            {
+                auto lr0 = lr1.getLeft();
+                auto id = lr0.getLeft();
+                auto pointpos = lr0.getRight();
+                if(grammar[id].getRight().size()!=pointpos && grammar[id].getRight()[pointpos]==terminal)
+                    newset.insert(LR1item(LR0item(id,pointpos+1),lr1.getRight()));
+            }
+            if(newset.size()!=0)
+            {
+                getClosure(newset);
+                if(closuremap.find(newset)==closuremap.end())
+                {
+                    closurelist.push_back(newset);
+                    closuremap.insert(make_pair(newset,closuremap.size()));
+                    //closuremap[newset]=closuremap.size();
+                    q.push(newset);
+                }
+                transfer[transfer.size()-1].push_back(std::make_pair(terminal,closuremap[newset]));
             }
         }
     }
@@ -232,6 +231,30 @@ bool Parser::openFile(const std::string &fileName)
     if(in)
     {
         std::string str;
+        int type = 0;
+        while(in>>str)
+        {
+            if(str=="[terminal]")
+            {
+                type = 1;
+                continue;
+            }
+            else if(str=="[variable]")
+            {
+                type = 2;
+                continue;
+            }
+            else if(str=="[production]")
+                break;
+            else
+            {
+                if(type==1)
+                    terminalSet.insert(str);
+                else if(type==2)
+                    variableSet.insert(str);
+            }
+        }
+
         while(getline(in,str))
         {
             if(str=="")

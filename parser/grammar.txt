@@ -1,55 +1,14 @@
-PROGRAM_		PROGRAM
+[terminal]
+* = i $
 
-PROGRAM			DECLARATION 
+[variable]
+S_ S L R
 
-BODY			DECLARATION	BODY
-BODY			IF BODY
-BODY			FOR BODY
-BODY			EQU BODY
-BODY			@
+[production]
+S_ S
+S L = R
+S R
+L * R
+L i
+R L
 
-DECLARATION		@
-DECLARATION		TYPE ID ; DECLARATION
-DECLARATION		FUNCTYPE ID ( LIST ) { BODY } DECLARATION
-
-TYPE			int
-TYPE			float
-
-FUNCTYPE		void
-FUNCTYPE		TYPE
-
-LIST			TYPE ID NEXTLIST
-LIST			TYPE ID
-LIST			@
-
-NEXTLIST		, TYPE ID
-NEXTLIST		, TYPE ID NEXTLIST
-
-IF				@
-IF				if ( VALUE ) ;
-IF				if ( VALUE ) { BODY } ;
-
-FOR				for ( BEGIN ; END ; CHANGE ) { BODY }
-FOR				for ( BEGIN ; END ; CHANGE ) { BODY } else { BODY }
-
-BEGIN			EQU
-END				JUDGE
-CHANGE			EQU
-
-EQU				ID = CALC ;
-EQU				@
-
-CALC			S
-CALC			T
-CALC			F
-
-S				T + T
-S				T - T
-
-T				F * F
-T				F / F
-T				F % F
-
-F				( S )
-
-JUDGE
