@@ -22,6 +22,8 @@ private:
     std::vector< vpsi > transfer;       //transfer function
     std::vector< std::map<std::string, psi>> action;
     std::vector< std::map<std::string, int>> go;
+    std::set< std::string > variableSet;
+    std::set< std::string > terminalSet;
 
     std::set<std::string> getFirst(const std::vector<std::string> &beta);
     std::set<LR1item> getClosure(const LR1item &item);

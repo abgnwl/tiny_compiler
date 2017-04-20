@@ -1,6 +1,14 @@
-S_	S
-S	L = R
-S	R
-L	* R
-L	i
-R	L
+[terminal]
+* = i $
+
+[variable]
+S_ S L R
+
+[production]
+S_ S
+S L = R
+S R
+L * R
+L i
+R L
+
