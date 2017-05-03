@@ -397,3 +397,13 @@ std::vector< std::map<std::string, int>> Parser::getGo()
 {
     return go;
 }
+
+std::set< std::string > Parser::getVariableSet()
+{
+    return variableSet;
+}
+
+std::set< std::string > Parser::getTerminalSet()
+{
+    return terminalSet;
+}

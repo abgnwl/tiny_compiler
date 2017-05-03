@@ -27,6 +27,7 @@ void getToken()
 
 void getGrammar()
 {
+    //freopen("output.txt","w",stdout);
     Parser parser;
     if(parser.openFile("parser/grammar.txt"))
         cout<<"ok"<<endl;
@@ -70,15 +71,34 @@ void getGrammar()
         }
     }
     cout<<endl;
+
+    cout<<"\t";
+    for(auto e:parser.getTerminalSet())
+        cout<<e<<"\t";
+    for(auto e:parser.getVariableSet())
+        cout<<e<<"\t";
+    cout<<endl;
+
     auto action = parser.getAction();
     auto go = parser.getGo();
     for(unsigned int i=0;i<action.size();i++)
     {
-        cout<<"I"<<i<<" ";
-        for(auto one:action[i])
-            cout<<one.first<<","<<one.second.first<<one.second.second<<" ";
-        for(auto one:go[i])
-            cout<<one.first<<","<<one.second<<" ";
+        cout<<"I"<<i<<"\t";
+
+        for(auto e:parser.getTerminalSet())
+        {
+            for(auto one:action[i])
+                if(one.first==e)
+                    cout<<one.second.first<<one.second.second;
+            cout<<"\t";
+        }
+        for(auto e:parser.getVariableSet())
+        {
+            for(auto one:go[i])
+                if(one.first==e)
+                    cout<<one.second<<"\t";
+            cout<<"\t";
+        }
         cout<<endl;
     }
     cout<<endl;
@@ -91,11 +111,12 @@ void analyse()
     for(auto i:tokens)cout<<i.getName()<<" ";cout<<endl;
     Parser parser;
     parser.openFile("parser/grammar.txt");
-    cout<<parser.analyse(tokens)<<endl;
+    parser.build();
+    //cout<<parser.analyse(tokens)<<endl;
 }
 int main()
 {
     getGrammar();
-    analyse();
+    //analyse();
     return 0;
 }

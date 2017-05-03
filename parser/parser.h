@@ -44,6 +44,7 @@ public:
     std::vector< std::map<std::string, psi>> getAction();
     std::vector< std::map<std::string, int>> getGo();
     int analyse(const std::vector<Token> &tokens);
-
+    std::set< std::string > getVariableSet();
+    std::set< std::string > getTerminalSet();
 };
 #endif // PARSER_H_INCLUDED
