@@ -1,15 +1,70 @@
 [terminal]
-$ a b c d
+$ begin end ; int float [ ] cst_int cst_float , ( ) == != > < >= <= = : id + - * / or and not if for while else
 
 [variable]
-S_ S A B
-
+_program program var_decl var_decls var_list fun_defs fun_def main stmts type var dems para_list para_decl stmt stmt_var expr bool init_stmt cycle_stmt stmt_dems
+term unary join rel
 [production]
-S_ S
-S b A S B
-S b A
-A d S a
-A b
-B c A a
-B c
+_program program
+program   var_decls fun_defs main
+main   begin var_decls stmts end
 
+var_decls   var_decl var_decls
+var_decls   @
+var_decl   type var_list ;
+type   int
+type   float
+var_list   var , var_list
+var_list   var
+var   id dems
+dems   [ cst_int ] dems
+dems   @
+
+fun_defs   fun_def fun_defs
+fun_defs   @
+fun_def   type id ( para_list ) : var_decls stmts end
+para_list   para_decl , para_list
+para_list   para_decl
+para_list   @
+para_decl   type id
+
+stmts   stmt stmts
+stmts   @
+stmt   stmt_var = expr ;
+stmt   if bool : stmts end
+stmt   if bool : stmts else stmts end
+stmt   while bool : stmts end
+stmt   for ( init_stmt ; bool ; cycle_stmt ) : stmts end
+init_stmt   stmt_var = expr
+cycle_stmt   stmt_var = expr
+init_stmt   @
+stmt_var   id stmt_dems
+stmt_dems   [ expr ] stmt_dems
+stmt_dems   @
+
+expr   term + expr
+expr   term - expr
+expr   term
+term   unary * term
+term   unary / term
+term   unary
+unary   - unary
+unary   cst_int
+unary   cst_float
+unary   stmt_var
+unary   ( expr )
+
+bool   join or bool
+bool   join
+join   rel and join
+join   rel
+rel   not rel
+rel   true
+rel   false
+rel   expr == expr
+rel   expr != expr
+rel   expr > expr
+rel   expr < expr
+rel   expr >= expr
+rel   expr <= expr
+rel   ( bool )
