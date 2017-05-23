@@ -102,11 +102,13 @@ std::set<std::string> Parser::getFirst(const std::string &symbol)
             }
         }
     }
+    /*
     #ifdef test
     cout<<"get one symbol first["<<symbol<<"]=";
     for(auto e:ret)cout<<e<<" ";
     cout<<endl;
     #endif // test
+    */
     return ret;
 }
 

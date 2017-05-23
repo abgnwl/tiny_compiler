@@ -1,84 +1,104 @@
 [terminal]
-+ - * / & ^ ~ | ++ -- || && ! == != < > <= >= =
-;  {  }  [  ]  (  )  . '
-char  float  int  if  else  while  continue  break main
-ID INT FLOAT CHAR 
-$
-[variable]
-PROGRAM MAIN BLOCK BODY 
-IF WHILE DECLARATION CONDITION
-TYPE ASSIGNMENT CONTROL 
-ADD MUL MULTEMP OR AND ANDTEMP
-S
+break continue
+char int float
+if else while 
+* / + - < > = <= >= != && || ==
+( ) [ ] { } ' ; $ ID INT FLOAT CHAR
 
+[variable]
+program'
+program
+main_declaration
+type_specifier
+compound_statement
+declaration_list
+declaration_type
+statement_list
+statement
+expression_statement
+expression
+assignment_expression
+condition_expression
+unary_expression
+logical_or_expression
+logical_and_expression
+equality_expression
+relational_expression
+additive_expression
+multiplicative_expression
+iteration_statement
+jump_statement
+selection_statement
 
 [production]
+program' -> program
+program -> main_declaration
+main_declaration -> type_specifier ID ( ) compound_statement
+type_specifier -> char
+type_specifier -> int
+type_specifier -> float
 
-S -> PROGRAM
+compound_statement -> { }
+compound_statement -> { declaration_list }
+compound_statement -> { statement_list }
+compound_statement -> { declaration_list statement_list }
 
-PROGRAM -> DECLARATION MAIN
-PROGRAM -> MAIN
+declaration_list -> declaration_type
+declaration_list -> declaration_list declaration_type
 
-MAIN -> int main ( ) { DECLARATION BODY }
-MAIN -> int main ( ) { BODY }
+declaration_type -> type_specifier ID ;
 
-DECLARATION -> TYPE ID ;
-DECLARATION -> TYPE ID ; DECLARATION
+statement_list -> statement
+statement_list -> statement_list statement
 
-TYPE -> char
-TYPE -> float
-TYPE -> int
+statement -> compound_statement
+statement -> expression_statement 
+statement -> iteration_statement 
+statement -> jump_statement 
+statement -> selection_statement
 
-BODY -> BLOCK
-BODY -> IF
-BODY -> IF BODY
-BODY -> WHILE
-BODY -> WHILE BODY
-BODY -> ASSIGNMENT
-BODY -> ASSIGNMENT BODY
-BODY -> CONTROL
-BODY -> CONTROL BODY
+expression_statement -> ;
+expression_statement -> expression ;
 
-CONTROL -> break ;
-CONTROL -> continue ;
+expression -> assignment_expression
 
-BLOCK -> { }
-BLOCK -> { BODY }
-BLOCK -> { DECLARATION BODY }
+assignment_expression -> ID = assignment_expression
+assignment_expression -> logical_or_expression
 
-IF -> if ( CONDITION ) BODY
-IF -> if ( CONDITION ) BODY else BODY
+logical_or_expression -> logical_and_expression
+logical_or_expression -> logical_or_expression || logical_and_expression
 
-WHILE -> while ( CONDITION ) BODY
+logical_and_expression -> equality_expression
+logical_and_expression -> logical_and_expression && equality_expression
 
-ASSIGNMENT -> ID = ADD ;
-ASSIGNMENT -> ID = INT ;
-ASSIGNMENT -> ID = FLOAT ;
-ASSIGNMENT -> ID = ' CHAR ' ;
-ADD -> MUL
-ADD -> ADD + MUL
-ADD -> ADD - MUL
-MUL -> MULTEMP
-MUL -> MUL * MULTEMP
-MUL -> MUL / MULTEMP
-MULTEMP -> ( ADD )
-MULTEMP -> ID
+equality_expression -> relational_expression
+equality_expression -> equality_expression == relational_expression
+equality_expression -> equality_expression != relational_expression
 
-CONDITION -> REPLACE
-CONDITION -> CONDITION <  REPLACE
-CONDITION -> CONDITION <= REPLACE
-CONDITION -> CONDITION == REPLACE
-CONDITION -> CONDITION >= REPLACE
-CONDITION -> CONDITION >  REPLACE
-CONDITION -> CONDITION != REPLACE
+relational_expression -> additive_expression
+relational_expression -> relational_expression < additive_expression
+relational_expression -> relational_expression > additive_expression
+relational_expression -> relational_expression <= additive_expression
+relational_expression -> relational_expression >= additive_expression
 
-REPLACE -> ADD
+additive_expression -> multiplicative_expression
+additive_expression -> additive_expression + multiplicative_expression
+additive_expression -> additive_expression - multiplicative_expression
 
-CONDITION -> OR
+multiplicative_expression -> unary_expression
+multiplicative_expression -> multiplicative_expression * unary_expression
+multiplicative_expression -> multiplicative_expression / unary_expression
 
-OR -> AND
-OR -> OR || AND
-AND -> ANDTEMP
-AND -> AND && ANDTEMP
-ANDTEMP -> ( OR )
+unary_expression -> ID
+unary_expression -> INT
+unary_expression -> FLOAT
+unary_expression -> CHAR
 
+iteration_statement -> while ( expression ) compound_statement
+
+jump_statement -> continue ;
+jump_statement -> break ;
+
+selection_statement -> if ( expression ) statement
+selection_statement -> if ( expression ) statement else statement
+ 

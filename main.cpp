@@ -26,6 +26,11 @@ void getGrammar()
     Parser parser;
     if(parser.openFile("parser/grammar.txt"))
         cout<<"ok"<<endl;
+    else
+    {
+        cout<<"oh no!"<<endl;
+        return;
+    }
     parser.build();
     auto grammar = parser.getGrammar();
     auto closurelist = parser.getClosurelist();
@@ -112,7 +117,9 @@ void analyse()
 int main()
 {
     getToken();
-    //getGrammar();
+    cout<<"1 finish"<<endl;
+    getGrammar();
+    cout<<"2 finish"<<endl;
     analyse();
     return 0;
 }
