@@ -37,7 +37,7 @@ private:
 public:
     LR1item()
     {
-        item = std::make_pair(LR0item(), "");
+        item = std::make_pair(LR0item(), "$");
     }
     LR1item(const LR0item &first, const std::string &second)
     {

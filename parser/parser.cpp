@@ -6,6 +6,7 @@
 #include <cctype>
 #include <queue>
 #include <stack>
+#include <sstream>
 #define test
 
 #ifdef test
@@ -20,18 +21,18 @@ int Parser::analyse(const std::vector<Token> &tokens)
     st.push({0,"$"});
 
     auto iter = tokens.cbegin();
-    for(;;)
+    for(; ; )
     {
         auto I = st.top().first;
-        if(action[I].find(iter->getName())!=action[I].end())
+        if(action[I].find(iter->getName()) != action[I].end())
         {
             auto act = action[I][iter->getName()];
-            if(act.first=="S")
+            if(act.first == "S")
             {
                 st.push({act.second,iter->getName()});
                 iter++;
             }
-            else if(act.first=="r")
+            else if(act.first == "r")
             {
                 auto id = act.second;
                 auto right = grammar[id].getRight();
@@ -39,17 +40,17 @@ int Parser::analyse(const std::vector<Token> &tokens)
                     st.pop();
                 auto newI = st.top().first;
                 st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
-                cout<<"use production: "<<grammar[id].getLeft()<<"->";for(auto e:right)cout<<e;cout<<endl;
+                std::cout<<"use production: "<<grammar[id].getLeft()<<"->";for(auto e:right)std::cout<<e;std::cout<<std::endl;
             }
-            else if(act.first=="acc")
+            else if(act.first == "acc")
             {
-                cout<<"Accept!"<<endl;
+                std::cout<<"Accept!"<<std::endl;
                 return 0;
             }
         }
         else
         {
-            cout<<"ERROR! at line "<<iter->getLine()<<endl;
+            std::cout<<"ERROR! at line "<<iter->getLine()<<std::endl;
             return iter->getLine();
         }
     }
@@ -58,14 +59,15 @@ int Parser::analyse(const std::vector<Token> &tokens)
 
 std::set<std::string> Parser::getFirst(const std::vector<std::string> &beta)
 {
-    if(terminalSet.find(beta[0])!=terminalSet.end() || beta[0]=="@")
+    if(terminalSet.find(beta[0])!=terminalSet.end())
         return std::set<std::string>{beta[0]};
 
     std::set<std::string> ret;
     bool isAllEmpty = 1;
+
     for(auto str:beta)
     {
-        if(terminalSet.find(str)!=terminalSet.end())
+        if(terminalSet.find(str)!=terminalSet.end())  // symbol in terminal set
         {
             isAllEmpty = 0;
             ret.insert(str);
@@ -79,7 +81,7 @@ std::set<std::string> Parser::getFirst(const std::vector<std::string> &beta)
                 {
                     auto right = production.getRight();
 
-                    if(right.size()==1 && right[0]=="@")
+                    if(right.empty())
                     {
                         isEmpty = 1;
                         continue;
@@ -116,7 +118,7 @@ void Parser::build()
     if(closuremap.size()!=0)
         return;
 
-    auto closure0 = getClosure(LR1item(LR0item(0,0),"$"));
+    auto closure0 = getClosure(LR1item(LR0item(0,0), "$"));
 
     std::queue<LR1set> q;
     q.push(closure0);
@@ -198,9 +200,12 @@ void Parser::build()
                 for(auto go:transfer[i])
                     if(go.first==right[point])
                     {
-                        if(action[i].find(right[point])!=action[i].end() && action[i][right[point]]!=std::pair<std::string, int>("S",go.second))
-                            cout<<"error 1 at action["<<i<<"]["<<right[point]<<"]=S"<<go.second<<"  old="<<action[i][right[point]].first<<action[i][right[point]].second<<endl;
-
+                        if(action[i].find(right[point]) != action[i].end()
+                           && action[i][right[point]] !=s td::pair<std::string, int>("S",go.second))
+                        {
+                            std::cout<<"error 1 at action["<<i<<"]["<<right[point]<<"]=S"<<go.second;
+                            std::cout<<"  old="<<action[i][right[point]].first<<action[i][right[point]].second<<std::endl;
+                        }
                         action[i][right[point]]=std::make_pair("S",go.second);
                     }
             }
@@ -211,7 +216,7 @@ void Parser::build()
             if(variableSet.find(tf.first)!=variableSet.end())
             {
                 if(go[i].find(tf.first)!=go[i].end())
-                    cout<<"error at go["<<i<<"]["<<tf.first<<"]"<<endl;
+                    std::cout<<"error at go["<<i<<"]["<<tf.first<<"]"<<std::endl;
 
                 go[i][tf.first]=tf.second;
 
@@ -229,7 +234,7 @@ void Parser::build()
             if(point == right.size())
             {
                 if(action[i].find(lookahead)!=action[i].end() && action[i][lookahead]!=std::pair<std::string,int>("r",id))
-                    cout<<"error 2 at action["<<i<<"]["<<lookahead<<"]=r"<<id<<" old="<<action[i][lookahead].first<<action[i][lookahead].second<<endl;
+                    std::cout<<"error 2 at action["<<i<<"]["<<lookahead<<"]=r"<<id<<" old="<<action[i][lookahead].first<<action[i][lookahead].second<<std::endl;
 
                 action[i][lookahead]=std::make_pair("r",id);
 
@@ -278,32 +283,23 @@ bool Parser::openFile(const std::string &fileName)
 
         while(getline(in,str))
         {
-            if(str=="")
+            if(str.empty())
                 continue;
             std::string temp;
+            std::istringstream iss = std::istringstream(str);
             Production production;
-            auto iter = str.cbegin();
-            while(iter!=str.cend() && isblank(*iter))
-                iter++;
-            for( ; iter!=str.cend(); )
+            iss >> temp;
+            production.setLeft(temp);
+            while(iss >> temp)
             {
-                if(isblank(*iter))
-                {
-                    if(production.getLeft()=="")
-                        production.setLeft(temp);
-                    else
-                        production.addRight(temp);
-                    temp="";
-                    while(iter!=str.cend() && isblank(*iter))
-                        iter++;
-                }
-                else
-                {
-                    temp+=*iter;
-                    iter++;
-                }
+              if(temp == "->" || temp == "@")
+                continue;
+              production.addRight(temp);
             }
-            production.addRight(temp);
+            std::cout<<production.getLeft()<<"->";
+            for(auto e:production.getRight())
+              std::cout<<e<<" ";
+            std::cout<<std::endl;
             grammar.push_back(production);
         }
         return true;
@@ -342,26 +338,34 @@ void Parser::getClosure(std::set<LR1item> &closure)
             unsigned int pointPos = lr0.getRight();
             auto right = grammar[lr0.getLeft()].getRight();
 
-            if(pointPos!=right.size() && variableSet.find(right[pointPos])!=variableSet.end())
+            if(pointPos != right.size() && variableSet.find(right[pointPos]) != variableSet.end())
             {
                 std::string B = right[pointPos];
                 std::vector<std::string> beta;
-                for(unsigned int i = pointPos+1; i<right.size(); i++)
+                for(unsigned int i = pointPos + 1; i < right.size(); i++)
                     beta.push_back(right[i]);
                 beta.push_back(lookahead);
 
                 auto first = getFirst(beta);
 
-                for(unsigned int productionID = 0; productionID<grammar.size(); productionID++)
+                #ifdef test
+                cout<<"first[";for(auto e:beta)cout<<e<<" ";cout<<"]=";
+                for(auto e:first)cout<<"("<<e<<")";
+                cout<<endl;
+                #endif // test
+
+                for(unsigned int productionID = 0; productionID < grammar.size(); productionID++)
                 {
                     const Production &production = grammar[productionID];
                     if(production.getLeft() == B)
+                    {
                         for(auto terminal:first)
                         {
                             LR1item newItem = LR1item(LR0item(productionID,0),terminal);
                             if(closure.find(newItem) == closure.end())
                                 temp.insert(newItem);
                         }
+                    }
                 }
             }
         }
