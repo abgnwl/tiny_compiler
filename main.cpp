@@ -9,7 +9,7 @@ using namespace std;
 void getToken()
 {
     Scanner scanner;
-    string FileName = "test.cpp";
+    string FileName = "test.txt";
 
     auto tokens = scanner.getTokens(FileName);
 
@@ -107,7 +107,7 @@ void getGrammar()
 void analyse()
 {
     Scanner scanner;
-    auto tokens = scanner.getTokens("test.cpp");
+    auto tokens = scanner.getTokens("test.txt");
     for(auto i:tokens)cout<<i.getName()<<" ";cout<<endl;
     Parser parser;
     parser.openFile("parser/grammar.txt");
@@ -116,10 +116,8 @@ void analyse()
 }
 int main()
 {
-    getToken();
-    cout<<"1 finish"<<endl;
+    //getToken();
     getGrammar();
-    cout<<"2 finish"<<endl;
     analyse();
     return 0;
 }

@@ -1,12 +1,13 @@
 [terminal]
 break continue
 char int float
-if else while 
+if else while
 * / + - < > = <= >= != && || ==
-( ) [ ] { } ' ; $ ID INT FLOAT CHAR
+( ) [ ] { } ' ; $
+ID INT FLOAT CHAR
 
 [variable]
-program'
+program_
 program
 main_declaration
 type_specifier
@@ -18,7 +19,6 @@ statement
 expression_statement
 expression
 assignment_expression
-condition_expression
 unary_expression
 logical_or_expression
 logical_and_expression
@@ -31,8 +31,9 @@ jump_statement
 selection_statement
 
 [production]
-program' -> program
+program_ -> program
 program -> main_declaration
+program -> declaration_list main_declaration
 main_declaration -> type_specifier ID ( ) compound_statement
 type_specifier -> char
 type_specifier -> int
@@ -93,6 +94,7 @@ unary_expression -> ID
 unary_expression -> INT
 unary_expression -> FLOAT
 unary_expression -> CHAR
+unary_expression -> ( logical_or_expression )
 
 iteration_statement -> while ( expression ) compound_statement
 

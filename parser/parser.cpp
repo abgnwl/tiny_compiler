@@ -50,7 +50,7 @@ int Parser::analyse(const std::vector<Token> &tokens)
                 auto newI = st.top().first;
                 st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
                 #ifdef test
-                cout<<"use production: "<<grammar[id].getLeft()<<"->";
+                cout<<"use production["<<id<<"]: "<<grammar[id].getLeft()<<"->";
                 for(auto e:right)cout<<e;
                 cout<<endl;
                 #endif // test
@@ -327,7 +327,10 @@ void Parser::build()
                    && action[i][lookahead]!=pair<string,int>("r",id))
                     cout<<"error 2 at action["<<i<<"]["<<lookahead<<"]=r"<<id<<" old="<<action[i][lookahead].first<<action[i][lookahead].second<<std::endl;
                 #endif
-                action[i][lookahead]=std::make_pair("r",id);
+                // deal with if else / if
+                if(!(action[i].find(lookahead)!=action[i].end()
+                   && action[i][lookahead]!=pair<string,int>("r",id)))
+                    action[i][lookahead]=std::make_pair("r",id);
 
                 if(lookahead=="$" && id==0)
                 {

@@ -4,7 +4,6 @@
 #include <fstream>
 #include <cctype>
 
-
 void Scanner::skipBlank()
 {
     while(iter!=code.cend() && *iter!=EOF)
@@ -215,7 +214,7 @@ Token Scanner::getNextToken()
     std::string name;
     TokenType type = TokenType::OTHER;
     skipBlank();
-    while(iter!=code.cend() && *iter!=EOF)
+    while((iter!=code.cend() && *iter!=EOF) || proc == Process::END )
     {
         switch(proc)
         {
@@ -262,6 +261,6 @@ std::vector<Token> Scanner::getTokens(const std::string FileName)
             tokens.push_back(token);
         }
     }
-    tokens.push_back(Token("$", TokenType::DELIMITER, 0));
+    tokens.push_back(Token("$", TokenType::DELIMITER, line));
     return tokens;
 }
