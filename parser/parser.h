@@ -16,18 +16,22 @@ typedef std::set<LR1item> LR1set;
 class Parser
 {
 private:
-    std::vector<Production> grammar;    //store grammar
-    std::vector< LR1set > closurelist;  //closure list
-    std::map< LR1set, int> closuremap;  //closure map
-    std::vector< vpsi > transfer;       //transfer function
-    std::vector< std::map<std::string, psi>> action;
-    std::vector< std::map<std::string, int>> go;
-    std::set< std::string > variableSet;
-    std::set< std::string > terminalSet;
+    std::vector<Production> grammar;   // store grammar
+    std::vector<LR1set > closurelist;  // closure list
+    std::map<LR1set, int> closuremap;  // closure map
+    std::vector<vpsi > transfer;       // transfer function
+    std::vector<std::map<std::string, psi>> action;     // action table
+    std::vector<std::map<std::string, int>> go;         // goto table
+    std::set<std::string > variableSet;                 // variable symbol set
+    std::set<std::string > terminalSet;                 // terminal symbol set
 
-    std::set<std::string> getFirst(const std::vector<std::string> &beta);
-    std::set<LR1item> getClosure(const LR1item &item);
-    void getClosure(LR1set &closure);
+    std::set<std::string> getFirst(const std::string &symbol);                   // get first(symbol)
+    std::set<std::string> getFirst(const std::vector<std::string> &beta);   // get first(beta), beta = A1A2...An
+    std::map<std::string, std::set<std::string>> firstMap;  // firstMap[X] = first(X), X is a symbol
+    void buildFirstMap();                                   // build first map
+
+    std::set<LR1item> getClosure(const LR1item &item);      // get closure
+    void getClosure(LR1set &closure);                       // merge closure
 
 public:
     Parser(){}
@@ -36,7 +40,6 @@ public:
     void build();
 
     std::vector<Production> getGrammar();
-
 
     std::vector< LR1set > getClosurelist();
     std::map< LR1set, int> getClosuremap();

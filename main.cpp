@@ -111,7 +111,7 @@ void analyse()
     for(auto i:tokens)cout<<i.getName()<<" ";cout<<endl;
     Parser parser;
     parser.openFile("parser/grammar.txt");
-    //parser.build();
+    parser.build();
     //cout<<parser.analyse(tokens)<<endl;
 }
 int main()
