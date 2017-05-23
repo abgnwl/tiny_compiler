@@ -37,7 +37,7 @@ public:
     void setName(const std::string &name);
     std::string getName() const;
     void setType(TokenType type);
-    TokenType getType();
+    TokenType getType() const;
     void setLine(size_t line);
     size_t getLine() const;
 };

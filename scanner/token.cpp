@@ -15,7 +15,7 @@ void Token::setType(TokenType type)
     this->type = type;
 }
 
-TokenType Token::getType()
+TokenType Token::getType() const
 {
     return this->type;
 }

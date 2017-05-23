@@ -13,7 +13,6 @@ enum class TokenType
     INT,
     FLOAT,
     CHAR,
-    STRING,
     OPERATOR,
     DELIMITER,
     OTHER
@@ -26,7 +25,6 @@ static std::map<TokenType, std::string> TokenDict=
     {TokenType::INT,"INT"},
     {TokenType::FLOAT,"FLOAT"},
     {TokenType::CHAR,"CHAR"},
-    {TokenType::STRING,"STRING"},
     {TokenType::OPERATOR,"OPERATOR"},
     {TokenType::DELIMITER,"DELIMITER"},
     {TokenType::OTHER,"OTHER"}
@@ -36,17 +34,22 @@ static std::map<TokenType, std::string> TokenDict=
 static std::vector<std::string> TokenStringType =
 {
     //constant
-    "INT","FLOAT","CHAR","STRING",
+    "INT","FLOAT","CHAR",
+
     //id
     "ID",
+
     //operator
-    "+","-","*","/","&","^","~","|","&","++","--","||","&&","!","==","!=","<",">","<=",">=","=",
+    "+","-","*","/","&","^","~","|","++","--","||","&&","!","==","!=","<",">","<=",">=","=",
+
     //delimiter
-    ",",";","{","}","[","]","(",")","#",".","\"","'",
+    ";", "{", "}", "[", "]", "(", ")", ".","'",
+
     //keyword
-    "break","char","string","const","continue","else","float","for","if","int","return","signed","typedef","unsigned","void","include"
+    "char", "float", "int", "if", "else", "while", "continue", "break"
 };
 
+/*
 static std::map<std::string, int> TokenCode =
 {
     {"INT",1},
@@ -104,5 +107,5 @@ static std::map<std::string, int> TokenCode =
     {"void",53},
     {"include",54}
 };
-
+*/
 #endif // TOKENTYPE_H_INCLUDED

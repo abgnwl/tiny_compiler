@@ -4,22 +4,18 @@
 #include <set>
 static std::set<std::string> keyWordSet =
 {
-    "break",
     "char",
-    "string",
-    "const",
-    "continue",
-    "else",
     "float",
-    "for",
-    "if",
     "int",
-    "return",
-    "signed",
-    "typedef",
-    "unsigned",
-    "void",
-    "include"   //is this a keyword?
+
+    "if",
+    "else",
+
+    "while",
+    "continue",
+    "break"
+
+    //"void"
 };
 
 #endif // KEYWORD_H_INCLUDED

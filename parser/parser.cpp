@@ -25,12 +25,19 @@ int Parser::analyse(const std::vector<Token> &tokens)
     for(; ; )
     {
         auto I = st.top().first;
-        if(action[I].find(iter->getName()) != action[I].end())
+        string name;
+        if(iter->getType() == TokenType::ID || iter->getType() == TokenType::CHAR
+           || iter->getType() == TokenType::INT || iter->getType()== TokenType::FLOAT )
+            name = TokenDict[iter->getType()];
+        else
+            name = iter->getName();
+
+        if(action[I].find(name) != action[I].end())
         {
-            auto act = action[I][iter->getName()];
+            auto act = action[I][name];
             if(act.first == "S")
             {
-                st.push({act.second,iter->getName()});
+                st.push({act.second, name});
                 iter++;
             }
             else if(act.first == "r")
@@ -38,10 +45,15 @@ int Parser::analyse(const std::vector<Token> &tokens)
                 auto id = act.second;
                 auto right = grammar[id].getRight();
                 for(unsigned int i=0; i<right.size(); i++)
-                    st.pop();
+                    if(right[i] != "@")
+                        st.pop();
                 auto newI = st.top().first;
                 st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
-                std::cout<<"use production: "<<grammar[id].getLeft()<<"->";for(auto e:right)std::cout<<e;std::cout<<std::endl;
+                #ifdef test
+                cout<<"use production: "<<grammar[id].getLeft()<<"->";
+                for(auto e:right)cout<<e;
+                cout<<endl;
+                #endif // test
             }
             else if(act.first == "acc")
             {
@@ -110,46 +122,51 @@ void Parser::buildFirstMap()
         firstMap.insert({symbol, getFirst(symbol)});
 
     // merge
-    for(auto symbol : variableSet)
+    for(; ; )
     {
-        for(;;)
+        bool changed = false;
+        for(auto symbol : variableSet)
         {
-            auto temp = firstMap[symbol];
-            for(auto produciton : grammar)
+            //if(symbol == "ADD")cout<<"get first (add) "<<endl;
+            for(;;)
             {
-                if(produciton.getLeft() == symbol)
+                auto temp = firstMap[symbol];
+                //if(symbol == "ADD"){cout<<"first= ";for(auto e:temp)cout<<e<<" ";cout<<endl;}
+                for(auto produciton : grammar)
                 {
-                    bool allEmpty = true;
-                    auto right = produciton.getRight();
-                    for(auto one:right)
+                    if(produciton.getLeft() == symbol)
                     {
-                        auto oneSet = firstMap[one];
-                        if(oneSet.erase("@"))
+                        bool allEmpty = true;
+                        auto right = produciton.getRight();
+                        //if(symbol == "ADD"){cout<<"  right= ";for(auto e:right)cout<<e<<" ";cout<<endl;}
+                        for(auto one:right)
                         {
-                            temp.insert(oneSet.begin(), oneSet.end());
+                            auto oneSet = firstMap[one];
+                            //if(symbol == "ADD"){cout<<"  oneset= ";for(auto e:oneSet)cout<<e<<" ";cout<<endl;}
+                            if(oneSet.erase("@"))
+                            {
+                                temp.insert(oneSet.begin(), oneSet.end());
+                            }
+                            else
+                            {
+                                temp.insert(oneSet.begin(), oneSet.end());
+                                allEmpty = false;
+                                break;
+                            }
                         }
-                        else
-                        {
-                            temp.insert(oneSet.begin(), oneSet.end());
-                            allEmpty = false;
-                            break;
-                        }
+                        if(allEmpty)
+                            temp.insert("@");
                     }
-                    if(allEmpty)
-                        temp.insert("@");
                 }
+                //if(symbol == "ADD"){cout<<" now tot = ";for(auto e:temp)cout<<e<<" ";cout<<endl;}
+                if(temp == firstMap[symbol])
+                    break;
+                firstMap[symbol] = temp;
+                changed = true;
             }
-            if(temp == firstMap[symbol])
-                break;
-            firstMap[symbol] = temp;
         }
-
-        #ifdef test
-        cout<<"get all first["<<symbol<<"]=";
-        for(auto e:firstMap[symbol])
-            cout<<"("<<e<<")";
-        cout<<endl;
-        #endif // test
+        if(!changed)
+            break;
     }
 }
 
@@ -193,7 +210,7 @@ void Parser::build()
     //closuremap[closure0] = closuremap.size();     // first insert closure, then map[closure] = 1
 
     closurelist.push_back(closure0);
-    closuremap.insert(make_pair(closure0,closuremap.size()));
+    closuremap.insert(make_pair(closure0, closuremap.size()));
 
 
     while(!q.empty())
@@ -367,12 +384,14 @@ bool Parser::openFile(const std::string &fileName)
               production.addRight(temp);
             }
             #ifdef test
+            /*
             cout<<production.getLeft()<<"->";
             for(auto e:production.getRight())
               cout<<e<<" ";
             cout<<endl;
-            grammar.push_back(production);
+            */
             #endif // test
+            grammar.push_back(production);
         }
         return true;
     }
@@ -416,19 +435,14 @@ void Parser::getClosure(std::set<LR1item> &closure)
             if(pointPos != right.size() && variableSet.find(right[pointPos]) != variableSet.end())
             {
                 std::string B = right[pointPos];
+
                 std::vector<std::string> beta;
                 for(unsigned int i = pointPos + 1; i < right.size(); i++)
                     beta.push_back(right[i]);
                 beta.push_back(lookahead);
 
                 auto first = getFirst(beta);
-/*
-                #ifdef test
-                cout<<"first[";for(auto e:beta)cout<<e<<" ";cout<<"]=";
-                for(auto e:first)cout<<"("<<e<<")";
-                cout<<endl;
-                #endif // test
-*/
+
                 for(unsigned int productionID = 0; productionID < grammar.size(); productionID++)
                 {
                     const Production &production = grammar[productionID];
@@ -436,7 +450,11 @@ void Parser::getClosure(std::set<LR1item> &closure)
                     {
                         for(auto terminal:first)
                         {
-                            LR1item newItem = LR1item(LR0item(productionID,0),terminal);
+                            LR1item newItem;
+                            if(production.getRight().size() == 1 && production.getRight()[0] == "@")
+                                newItem = LR1item(LR0item(productionID, 1), terminal);
+                            else
+                                newItem = LR1item(LR0item(productionID, 0), terminal);
                             if(closure.find(newItem) == closure.end())
                                 temp.insert(newItem);
                         }
@@ -444,7 +462,7 @@ void Parser::getClosure(std::set<LR1item> &closure)
                 }
             }
         }
-        if(temp==closure)
+        if(temp == closure)
             break;
         else
             closure = temp;

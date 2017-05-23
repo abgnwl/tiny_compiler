@@ -1,15 +1,84 @@
 [terminal]
-a b c $
-
++ - * / & ^ ~ | ++ -- || && ! == != < > <= >= =
+;  {  }  [  ]  (  )  . '
+char  float  int  if  else  while  continue  break main
+ID INT FLOAT CHAR 
+$
 [variable]
-S A B C
+PROGRAM MAIN BLOCK BODY 
+IF WHILE DECLARATION CONDITION
+TYPE ASSIGNMENT CONTROL 
+ADD MUL MULTEMP OR AND ANDTEMP
+S
+
 
 [production]
-S -> C A B
-A -> a
-A -> @
-B -> B b
-B -> @
-C -> c
-C -> B A
-C -> C c
+
+S -> PROGRAM
+
+PROGRAM -> DECLARATION MAIN
+PROGRAM -> MAIN
+
+MAIN -> int main ( ) { DECLARATION BODY }
+MAIN -> int main ( ) { BODY }
+
+DECLARATION -> TYPE ID ;
+DECLARATION -> TYPE ID ; DECLARATION
+
+TYPE -> char
+TYPE -> float
+TYPE -> int
+
+BODY -> BLOCK
+BODY -> IF
+BODY -> IF BODY
+BODY -> WHILE
+BODY -> WHILE BODY
+BODY -> ASSIGNMENT
+BODY -> ASSIGNMENT BODY
+BODY -> CONTROL
+BODY -> CONTROL BODY
+
+CONTROL -> break ;
+CONTROL -> continue ;
+
+BLOCK -> { }
+BLOCK -> { BODY }
+BLOCK -> { DECLARATION BODY }
+
+IF -> if ( CONDITION ) BODY
+IF -> if ( CONDITION ) BODY else BODY
+
+WHILE -> while ( CONDITION ) BODY
+
+ASSIGNMENT -> ID = ADD ;
+ASSIGNMENT -> ID = INT ;
+ASSIGNMENT -> ID = FLOAT ;
+ASSIGNMENT -> ID = ' CHAR ' ;
+ADD -> MUL
+ADD -> ADD + MUL
+ADD -> ADD - MUL
+MUL -> MULTEMP
+MUL -> MUL * MULTEMP
+MUL -> MUL / MULTEMP
+MULTEMP -> ( ADD )
+MULTEMP -> ID
+
+CONDITION -> REPLACE
+CONDITION -> CONDITION <  REPLACE
+CONDITION -> CONDITION <= REPLACE
+CONDITION -> CONDITION == REPLACE
+CONDITION -> CONDITION >= REPLACE
+CONDITION -> CONDITION >  REPLACE
+CONDITION -> CONDITION != REPLACE
+
+REPLACE -> ADD
+
+CONDITION -> OR
+
+OR -> AND
+OR -> OR || AND
+AND -> ANDTEMP
+AND -> AND && ANDTEMP
+ANDTEMP -> ( OR )
+

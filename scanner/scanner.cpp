@@ -166,44 +166,15 @@ void Scanner::dealOperator(std::string &name, TokenType &type)
 
 void Scanner::dealDelimiter(std::string &name, TokenType &type)
 {
-    if(*iter=='"')
-    {
-        name+=*iter;
-        iter++;
-        proc = Process::IN_STRING;
-        dealString(name,type);
-    }
-    else if(*iter=='\'')
-    {
-        name+=*iter;
-        iter++;
-        proc = Process::IN_CHAR;
-        dealChar(name,type);
-    }
-    else
-    {
-        name+=*iter;
-        iter++;
-        type = TokenType::DELIMITER;
-        proc = Process::END;
-    }
-
+    name+=*iter;
+    iter++;
+    type = TokenType::DELIMITER;
+    proc = Process::END;
 }
 
 Token Scanner::dealEnd(const std::string &name, const TokenType &type)
 {
     return Token(name,type,line);
-}
-
-void Scanner::dealString(std::string &name, TokenType &type)
-{
-    if(*iter=='"')
-    {
-        type = TokenType::STRING;
-        proc = Process::END;
-    }
-    name+=*iter;
-    iter++;
 }
 
 void Scanner::dealChar(std::string &name, TokenType &type)
@@ -272,9 +243,6 @@ Token Scanner::getNextToken()
         case Process::IN_CHAR:
             dealChar(name,type);
             break;
-        case Process::IN_STRING:
-            dealString(name,type);
-            break;
         case Process::END:
             auto token = dealEnd(name,type);
             return token;
@@ -294,6 +262,6 @@ std::vector<Token> Scanner::getTokens(const std::string FileName)
             tokens.push_back(token);
         }
     }
-    tokens.push_back(Token("$",TokenType::OPERATOR,0));
+    tokens.push_back(Token("$", TokenType::DELIMITER, 0));
     return tokens;
 }

@@ -15,7 +15,6 @@ enum class Process
     IN_OPERATOR,
     IN_DELIMITER,
     IN_CHAR,
-    IN_STRING,
     END
 };
 

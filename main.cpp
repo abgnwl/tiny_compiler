@@ -15,19 +15,14 @@ void getToken()
 
     for(auto token:tokens)
     {
-        TokenType type = token.getType();
         //cout<<token.getName()<<endl;
-        if(type==TokenType::ID||type==TokenType::FLOAT||type==TokenType::INT||type==TokenType::CHAR||type==TokenType::STRING)
-            cout<<"("<<TokenCode[TokenDict[token.getType()]]<<","<<token.getName()<<")";
-        else
-            cout<<"("<<TokenCode[token.getName()]<<", )";
         cout<<"    "<<token.getName()<<" "<<TokenDict[token.getType()]<<"  "<<token.getLine()<<endl;
     }
 }
 
 void getGrammar()
 {
-    //freopen("output.txt","w",stdout);
+    freopen("output.txt","w",stdout);
     Parser parser;
     if(parser.openFile("parser/grammar.txt"))
         cout<<"ok"<<endl;
@@ -112,10 +107,11 @@ void analyse()
     Parser parser;
     parser.openFile("parser/grammar.txt");
     parser.build();
-    //cout<<parser.analyse(tokens)<<endl;
+    cout<<parser.analyse(tokens)<<endl;
 }
 int main()
 {
+    getToken();
     //getGrammar();
     analyse();
     return 0;
