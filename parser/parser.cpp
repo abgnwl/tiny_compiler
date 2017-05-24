@@ -14,9 +14,169 @@
 using namespace std;
 #endif // test
 
+class node
+{
+    std::string name;
+    std::vector<std::string> cmd;
+    node(std::string name_="", std::vector<std::string> cmd_={})
+    {
+        name = name_;
+        cmd = cmd_;
+    }
+};
+std::stack<std::string> trst;
+int tempNum;
+int labelNum;
+std::ostringstream os;
+
+std::string itos(int i)
+{
+    std::ostringstream os;
+    os<<i;
+    return os.str();
+}
+
+int Parser::translate(int id, std::string name)
+{
+    cout<<"translate "<<id<<" "<<name<<endl;
+    switch(id)
+    {
+        /*
+        case 16: case 17: case 18: case 19: case 20:
+        {
+            auto
+
+        }*/
+        case 24:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(=, "<<r<<", , "<<l<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            break;
+        }
+        case 27:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(or, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 29:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(and, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 31:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(==, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 32:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(!=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 34:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(<, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 35:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(>, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 36:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(<=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 37:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(>=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 39:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(+, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 40:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(-, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 42:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(*, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        case 43:
+        {
+            auto r = trst.top(); trst.pop();
+            auto l = trst.top(); trst.pop();
+            os<<"(/, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
+            trst.push("@"+itos(tempNum));
+            tempNum++;
+            break;
+        }
+        default:
+            break;
+    }
+
+    return 1;
+}
+
 // analyze the tokens with grammar
 int Parser::analyse(const std::vector<Token> &tokens)
 {
+    tempNum = 0;
+    labelNum = 0;
+    os.clear();
+
     build();
     std::stack<std::pair<unsigned int, std::string>> st;
     st.push({0,"$"});
@@ -25,19 +185,23 @@ int Parser::analyse(const std::vector<Token> &tokens)
     for(; ; )
     {
         auto I = st.top().first;
-        string name;
+        std::string type;
         if(iter->getType() == TokenType::ID || iter->getType() == TokenType::CHAR
            || iter->getType() == TokenType::INT || iter->getType()== TokenType::FLOAT )
-            name = TokenDict[iter->getType()];
-        else
-            name = iter->getName();
-
-        if(action[I].find(name) != action[I].end())
         {
-            auto act = action[I][name];
+            type = TokenDict[iter->getType()];
+            trst.push(iter->getName());
+
+        }
+        else
+            type = iter->getName();
+
+        if(action[I].find(type) != action[I].end())
+        {
+            auto act = action[I][type];
             if(act.first == "S")
             {
-                st.push({act.second, name});
+                st.push({act.second, type});
                 iter++;
             }
             else if(act.first == "r")
@@ -49,6 +213,15 @@ int Parser::analyse(const std::vector<Token> &tokens)
                         st.pop();
                 auto newI = st.top().first;
                 st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
+
+                // translate
+
+                if(!translate(id, iter->getName()))
+                {
+                    std::cout<<"ERROR! at line "<<iter->getLine()<<std::endl;
+                    return iter->getLine();
+                }
+
                 #ifdef test
                 cout<<"use production["<<id<<"]: "<<grammar[id].getLeft()<<"->";
                 for(auto e:right)cout<<e;
@@ -58,6 +231,7 @@ int Parser::analyse(const std::vector<Token> &tokens)
             else if(act.first == "acc")
             {
                 std::cout<<"Accept!"<<std::endl;
+                std::cout<<os.str();
                 return 0;
             }
         }
@@ -102,13 +276,6 @@ std::set<std::string> Parser::getFirst(const std::string &symbol)
             }
         }
     }
-    /*
-    #ifdef test
-    cout<<"get one symbol first["<<symbol<<"]=";
-    for(auto e:ret)cout<<e<<" ";
-    cout<<endl;
-    #endif // test
-    */
     return ret;
 }
 
@@ -380,6 +547,7 @@ bool Parser::openFile(const std::string &fileName)
             std::string temp;
             std::istringstream iss = std::istringstream(str);
             Production production;
+            iss >> temp;
             iss >> temp;
             production.setLeft(temp);
             while(iss >> temp)

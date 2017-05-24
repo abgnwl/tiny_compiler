@@ -32,7 +32,7 @@ private:
 
     std::set<LR1item> getClosure(const LR1item &item);      // get closure
     void getClosure(LR1set &closure);                       // merge closure
-
+    int translate(int id, std::string name);
 public:
     Parser(){}
 
