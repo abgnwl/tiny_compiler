@@ -24,10 +24,10 @@ class node
         cmd = cmd_;
     }
 };
-std::stack<std::string> trst;
+std::stack<std::ostringstream> strStack;
+std::stack<std::string> varStack;
 int tempNum;
 int labelNum;
-std::ostringstream os;
 
 std::string itos(int i)
 {
@@ -41,125 +41,120 @@ int Parser::translate(int id, std::string name)
     cout<<"translate "<<id<<" "<<name<<endl;
     switch(id)
     {
-        /*
-        case 16: case 17: case 18: case 19: case 20:
-        {
-            auto
-
-        }*/
         case 24:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
-            os<<"(=, "<<r<<", , "<<l<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            auto r = varStack.top(); varStack.pop();
+            auto l = varStack.top(); varStack.pop();
+            string command = "(=, " + r +", , " + l +
+            strStack.push();
+            varStack.push("@"+itos(tempNum));
             break;
         }
         case 27:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = ostrStack.top(); strStack.pop();
             os<<"(or, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 29:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(and, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 31:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(==, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 32:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(!=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 34:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(<, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 35:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(>, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 36:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(<=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 37:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(>=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 39:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(+, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 40:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(-, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 42:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(*, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
         case 43:
         {
-            auto r = trst.top(); trst.pop();
-            auto l = trst.top(); trst.pop();
+            auto r = strStack.top(); strStack.pop();
+            auto l = strStack.top(); strStack.pop();
             os<<"(/, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            trst.push("@"+itos(tempNum));
+            strStack.push("@"+itos(tempNum));
             tempNum++;
             break;
         }
@@ -190,7 +185,7 @@ int Parser::analyse(const std::vector<Token> &tokens)
            || iter->getType() == TokenType::INT || iter->getType()== TokenType::FLOAT )
         {
             type = TokenDict[iter->getType()];
-            trst.push(iter->getName());
+            strStack.push(iter->getName());
 
         }
         else
