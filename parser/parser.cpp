@@ -24,138 +24,325 @@ class node
         cmd = cmd_;
     }
 };
-std::stack<std::ostringstream> strStack;
+std::stack<std::string> strStack;
 std::stack<std::string> varStack;
 int tempNum;
 int labelNum;
 
 std::string itos(int i)
 {
-    std::ostringstream os;
-    os<<i;
-    return os.str();
+    std::ostringstream temp;
+    temp<<"TEMP"<<i;
+    return temp.str();
+}
+
+std::string varStackPop()
+{
+    auto var = varStack.top();
+    varStack.pop();
+    return var;
+}
+
+std::string strStackPop()
+{
+    auto str = strStack.top();
+    strStack.pop();
+    return str;
+}
+
+std::string cmd(std::string a, std::string b, std::string c, std::string d)
+{
+    return  "(" + a + ", " + b + ", " + c + ", " + d + ")";
 }
 
 int Parser::translate(int id, std::string name)
 {
-    cout<<"translate "<<id<<" "<<name<<endl;
     switch(id)
     {
+        case 3:
+        {
+            varStackPop();
+            varStackPop();
+            #ifdef test
+            cout<<"[case 3] [var pop]"<<endl;
+            cout<<"[case 3] [var pop]"<<endl;
+            #endif // test
+            break;
+        }
+
+        case 13:
+        {
+            varStackPop();
+            #ifdef test
+            cout<<"[case 13] [var pop]"<<endl;
+            #endif // test
+            break;
+        }
+
+        case 15:
+        {
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            strStack.push(os.str());
+            #ifdef test
+            cout<<"[case 15] [str pop] "<<endl;
+            cout<<"[case 15] [str pop] "<<endl;
+            cout<<"[case 15] [str push] "<<os.str()<<endl;
+            #endif // test
+            break;
+        }
+
         case 24:
         {
-            auto r = varStack.top(); varStack.pop();
-            auto l = varStack.top(); varStack.pop();
-            string command = "(=, " + r +", , " + l +
-            strStack.push();
-            varStack.push("@"+itos(tempNum));
+            auto r = varStackPop();
+            auto l = varStackPop();
+            std::ostringstream os;
+            os << strStackPop();
+            os << cmd("=", r, "", l) << std::endl;
+            strStack.push(os.str());
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 27:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = ostrStack.top(); strStack.pop();
-            os<<"(or, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("or", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 29:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(and, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("and", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 31:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(==, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("==", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 32:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(!=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("!=", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 34:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(<, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("<", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 35:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(>, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd(">", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 36:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(<=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("<=", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 37:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(>=, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd(">=", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 39:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(+, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("+", lvar, rvar, itos(tempNum)) << std::endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 40:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(-, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("-", lvar, rvar, itos(tempNum)) << endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 42:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(*, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("*", lvar, rvar, itos(tempNum)) << endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
             break;
         }
         case 43:
         {
-            auto r = strStack.top(); strStack.pop();
-            auto l = strStack.top(); strStack.pop();
-            os<<"(/, "<<l<<", "<<r<<", @"<<tempNum<<")"<<endl;
-            strStack.push("@"+itos(tempNum));
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            os << lstr << rstr;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << cmd("/", lvar, rvar, itos(tempNum)) << endl;
+            strStack.push(os.str());
+            varStack.push(itos(tempNum));
             tempNum++;
+            #ifdef test
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str pop] "<<endl;
+            cout<<"[case"<<id<<"] [str push] "<<os.str()<<endl;
+            #endif // test
+            break;
+        }
+        case 44: case 45: case 46: case 47:
+        {
+            strStack.push("");
+            #ifdef test
+            cout<<"[case"<<id<<"] [str push] []"<<endl;
+            #endif // test
             break;
         }
         default:
@@ -170,8 +357,6 @@ int Parser::analyse(const std::vector<Token> &tokens)
 {
     tempNum = 0;
     labelNum = 0;
-    os.clear();
-
     build();
     std::stack<std::pair<unsigned int, std::string>> st;
     st.push({0,"$"});
@@ -183,11 +368,7 @@ int Parser::analyse(const std::vector<Token> &tokens)
         std::string type;
         if(iter->getType() == TokenType::ID || iter->getType() == TokenType::CHAR
            || iter->getType() == TokenType::INT || iter->getType()== TokenType::FLOAT )
-        {
             type = TokenDict[iter->getType()];
-            strStack.push(iter->getName());
-
-        }
         else
             type = iter->getName();
 
@@ -196,6 +377,12 @@ int Parser::analyse(const std::vector<Token> &tokens)
             auto act = action[I][type];
             if(act.first == "S")
             {
+                if(iter->getType() == TokenType::ID || iter->getType() == TokenType::CHAR
+                   || iter->getType() == TokenType::INT || iter->getType()== TokenType::FLOAT )
+                    {
+                        varStack.push(iter->getName());
+                        cout<<"[pushVAR] "<<iter->getName() <<"   [at line "<<iter->getLine()<<"]"<<endl;
+                    }
                 st.push({act.second, type});
                 iter++;
             }
@@ -210,23 +397,21 @@ int Parser::analyse(const std::vector<Token> &tokens)
                 st.push({go[newI][grammar[id].getLeft()],grammar[id].getLeft()});
 
                 // translate
-
+                #ifdef test
+                cout<<"use production["<<id<<"]: "<<grammar[id].getLeft()<<"->";
+                for(auto e:right)cout<<e<<" ";
+                cout<<endl;
+                #endif // test
                 if(!translate(id, iter->getName()))
                 {
                     std::cout<<"ERROR! at line "<<iter->getLine()<<std::endl;
                     return iter->getLine();
                 }
-
-                #ifdef test
-                cout<<"use production["<<id<<"]: "<<grammar[id].getLeft()<<"->";
-                for(auto e:right)cout<<e;
-                cout<<endl;
-                #endif // test
             }
             else if(act.first == "acc")
             {
                 std::cout<<"Accept!"<<std::endl;
-                std::cout<<os.str();
+                std::cout<<strStack.top()<<endl;
                 return 0;
             }
         }
