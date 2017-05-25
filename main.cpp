@@ -22,7 +22,6 @@ void getToken()
 
 void getGrammar()
 {
-    freopen("output.txt","w",stdout);
     Parser parser;
     if(parser.openFile("parser/grammar.txt"))
         cout<<"ok"<<endl;
@@ -108,16 +107,18 @@ void analyse()
 {
     Scanner scanner;
     auto tokens = scanner.getTokens("test.txt");
-    for(auto i:tokens)cout<<i.getName()<<" ";cout<<endl;
+    //for(auto i:tokens)cout<<i.getName()<<" ";cout<<endl;
     Parser parser;
     parser.openFile("parser/grammar.txt");
     parser.build();
-    cout<<parser.analyse(tokens)<<endl;
+    parser.analyse(tokens);
+    //cout<<parser.analyse(tokens)<<endl;
 }
 int main()
 {
+    freopen("output.txt","w",stdout);
     //getToken();
-    getGrammar();
+    //getGrammar();
     analyse();
     return 0;
 }

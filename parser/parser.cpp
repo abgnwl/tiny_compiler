@@ -7,32 +7,29 @@
 #include <queue>
 #include <stack>
 #include <sstream>
-#define test
+//#define test
 
 #ifdef test
 #include <iostream>
 using namespace std;
 #endif // test
 
-class node
-{
-    std::string name;
-    std::vector<std::string> cmd;
-    node(std::string name_="", std::vector<std::string> cmd_={})
-    {
-        name = name_;
-        cmd = cmd_;
-    }
-};
 std::stack<std::string> strStack;
 std::stack<std::string> varStack;
 int tempNum;
 int labelNum;
 
-std::string itos(int i)
+std::string itoTemp(int i)
 {
     std::ostringstream temp;
     temp<<"TEMP"<<i;
+    return temp.str();
+}
+
+std::string itoLabel(int i)
+{
+    std::ostringstream temp;
+    temp<<"LABEL"<<i;
     return temp.str();
 }
 
@@ -55,8 +52,18 @@ std::string cmd(std::string a, std::string b, std::string c, std::string d)
     return  "(" + a + ", " + b + ", " + c + ", " + d + ")";
 }
 
+// fuck this function!!!!!!
+// I'm angry!!!!
+// you are too young
+// too simple
+// sometimes
+// naive!
 int Parser::translate(int id, std::string name)
 {
+    #ifdef test
+    cout<<"[translate] "<<id<<"  varSize=["<<varStack.size()<<"]";
+    cout<<"    strSize=["<<strStack.size()<<"]"<<endl;
+    #endif // test
     switch(id)
     {
         case 3:
@@ -67,6 +74,15 @@ int Parser::translate(int id, std::string name)
             cout<<"[case 3] [var pop]"<<endl;
             cout<<"[case 3] [var pop]"<<endl;
             #endif // test
+            break;
+        }
+
+        case 9: case 10:
+        {
+            auto str = strStackPop();
+            std::ostringstream os;
+            os << std::endl << str;
+            strStack.push(os.str());
             break;
         }
 
@@ -86,6 +102,9 @@ int Parser::translate(int id, std::string name)
             std::ostringstream os;
             os << lstr << rstr;
             strStack.push(os.str());
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            varStack.push(lvar);
             #ifdef test
             cout<<"[case 15] [str pop] "<<endl;
             cout<<"[case 15] [str pop] "<<endl;
@@ -102,6 +121,7 @@ int Parser::translate(int id, std::string name)
             os << strStackPop();
             os << cmd("=", r, "", l) << std::endl;
             strStack.push(os.str());
+            varStack.push(l);
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -117,9 +137,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("or", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("or", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -136,9 +156,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("and", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("and", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -155,9 +175,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("==", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("==", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -174,9 +194,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("!=", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("!=", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -193,9 +213,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("<", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("<", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -212,9 +232,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd(">", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd(">", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -231,9 +251,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("<=", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("<=", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -250,9 +270,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd(">=", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd(">=", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -269,9 +289,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("+", lvar, rvar, itos(tempNum)) << std::endl;
+            os << cmd("+", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -288,9 +308,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("-", lvar, rvar, itos(tempNum)) << endl;
+            os << cmd("-", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -307,9 +327,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("*", lvar, rvar, itos(tempNum)) << endl;
+            os << cmd("*", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -326,9 +346,9 @@ int Parser::translate(int id, std::string name)
             os << lstr << rstr;
             auto rvar = varStackPop();
             auto lvar = varStackPop();
-            os << cmd("/", lvar, rvar, itos(tempNum)) << endl;
+            os << cmd("/", lvar, rvar, itoTemp(tempNum)) << std::endl;
             strStack.push(os.str());
-            varStack.push(itos(tempNum));
+            varStack.push(itoTemp(tempNum));
             tempNum++;
             #ifdef test
             cout<<"[case"<<id<<"] [str pop] "<<endl;
@@ -345,10 +365,82 @@ int Parser::translate(int id, std::string name)
             #endif // test
             break;
         }
+
+        case 49:
+        {
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+
+            os << cmd(itoLabel(labelNum), "", "", "") << std::endl;
+            os << lstr;
+            os << cmd("J!=", lvar, "0", itoLabel(labelNum + 1)) << std::endl;
+            os << cmd("J", "", "", itoLabel(labelNum + 2)) << std::endl;
+            os << cmd(itoLabel(labelNum + 1), "", "", "") << std::endl;
+            os << rstr;
+            os << cmd("J", "", "", itoLabel(labelNum)) << std::endl;
+            os << cmd(itoLabel(labelNum + 2), "", "", "") << std::endl;
+            labelNum += 3;
+            strStack.push(os.str());
+            varStack.push(lvar);
+            break;
+        }
+
+        case 52:
+        {
+            auto rstr = strStackPop();
+            auto lstr = strStackPop();
+            std::ostringstream os;
+            auto rvar = varStackPop();
+            auto lvar = varStackPop();
+            os << lstr;
+            os << cmd("J!=", lvar, "0", itoLabel(labelNum)) << std::endl;
+            os << cmd("J", "", "", itoLabel(labelNum + 1)) << std::endl;
+            os << cmd(itoLabel(labelNum), "", "", "") << std::endl;;
+            os << rstr;
+            os << cmd(itoLabel(labelNum + 1), "", "", "") << std::endl;
+            labelNum += 2;
+            strStack.push(os.str());
+            varStack.push(lvar);
+            break;
+        }
+
+        case 53:
+        {
+            auto rstr = strStackPop();
+            auto midstr = strStackPop();
+            auto lstr = strStackPop();
+
+            std::ostringstream os;
+            auto rvar = varStackPop();
+            auto midvar = varStackPop();
+            auto lvar = varStackPop();
+
+            os << lstr;
+            os << cmd("J!=", lvar, "0", itoLabel(labelNum)) << std::endl;
+            os << cmd("J", "", "", itoLabel(labelNum + 1)) << std::endl;
+            os << cmd(itoLabel(labelNum), "", "", "") << std::endl;;
+            os << midstr;
+            os << cmd("J", "", "", itoLabel(labelNum + 2)) << std::endl;
+            os << cmd(itoLabel(labelNum + 1), "", "", "") << std::endl;
+            os << rstr;
+            os << cmd(itoLabel(labelNum + 2), "", "", "") << std::endl;
+            labelNum += 3;
+            strStack.push(os.str());
+            varStack.push(lvar);
+            break;
+        }
+
         default:
             break;
     }
-
+    #ifdef test
+    cout<<"[/translate] "<<id<<"  varSize=["<<varStack.size()<<"]";
+    cout<<"    strSize=["<<strStack.size()<<"]"<<endl;
+    cout<<endl;
+    #endif // test
     return 1;
 }
 
@@ -381,7 +473,7 @@ int Parser::analyse(const std::vector<Token> &tokens)
                    || iter->getType() == TokenType::INT || iter->getType()== TokenType::FLOAT )
                     {
                         varStack.push(iter->getName());
-                        cout<<"[pushVAR] "<<iter->getName() <<"   [at line "<<iter->getLine()<<"]"<<endl;
+                        //cout<<"[pushVAR] "<<iter->getName() <<"   [at line "<<iter->getLine()<<"]"<<endl;
                     }
                 st.push({act.second, type});
                 iter++;
@@ -410,8 +502,8 @@ int Parser::analyse(const std::vector<Token> &tokens)
             }
             else if(act.first == "acc")
             {
-                std::cout<<"Accept!"<<std::endl;
-                std::cout<<strStack.top()<<endl;
+                std::cout<<"Accept!"<<std::endl<<std::endl;
+                std::cout<<strStack.top()<<std::endl;
                 return 0;
             }
         }
@@ -676,7 +768,7 @@ void Parser::build()
                 #endif
                 // deal with if else / if
                 if(!(action[i].find(lookahead)!=action[i].end()
-                   && action[i][lookahead]!=pair<string,int>("r",id)))
+                   && action[i][lookahead]!=std::pair<std::string,int>("r",id)))
                     action[i][lookahead]=std::make_pair("r",id);
 
                 if(lookahead=="$" && id==0)
